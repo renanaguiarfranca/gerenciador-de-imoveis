@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbinho</title>
+</head>
+<body>
+
+    {{titulo_casa}}
+    <h1>Casa</h1>
+    <ul>
+        {% for casa in casas %}
+        <li>{{ casa.id_casa }}</li>
+        <li>{{ casa.titulo_casa }}</li>
+        <li>{{ casa.diaria_casa }}</li>
+        <li>{{ casa.comodos_casa }}</li>
+        {% endfor %}
+    </ul>
+
+
+</body>
+</html>
