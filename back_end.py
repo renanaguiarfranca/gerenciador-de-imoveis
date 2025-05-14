@@ -12,7 +12,7 @@ header = (figlet_format('ARBINHO', font = "cosmic"))
 #                                📃 Tela de cadastro 📃                              # 
 #=====================================================================================#
 def telaInicio():
-    print("[bold cyan]{}[/bold cyan]".format(header))
+    print(header)
     comandoInicio = str(input("Digite o comando\n|0|🔐 LOGIN\n|1|📃 CADASTRAR CLIENTE\n"))
     if(comandoInicio == str(0)):
         # login()
@@ -429,7 +429,10 @@ def atribuirCliente():
     print('Tela para Atribuir Cliente ao Imovel🏡🏃💨\n')
     idCliente = str(input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>>'))
     idImovel = str(input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>>'))
-
+    cursor.execute(
+     "UPDATE TBL_imovel " \
+     "SET fk_TBL_imovel_id_cliente = %s " \
+     "WHERE id_imovel = %s "),(idCliente,idImovel)
 #=====================================================================================#
 #                                👨‍💻 Adicionar ADM 👨‍💻                                 # 
 #=====================================================================================#
