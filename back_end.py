@@ -429,13 +429,7 @@ def atribuirCliente():
     print('Tela para Atribuir Cliente ao Imovel🏡🏃💨\n')
     idCliente = str(input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>>'))
     idImovel = str(input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>>'))
-    cursor.execute("UPDATE TBL_imovel set fk_TBL_imovel_id_cliente = %s WHERE id_imovel = %s;", (idCliente, idImovel))
-    cursor.fetchone()
-    db.commit()
-    cursor.close()
-    db.close()
-    main()
-    
+
 #=====================================================================================#
 #                                👨‍💻 Adicionar ADM 👨‍💻                                 # 
 #=====================================================================================#
