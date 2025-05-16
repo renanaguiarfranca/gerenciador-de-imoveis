@@ -13,25 +13,39 @@ header = (figlet_format('ARBINHO', font = "cosmic"))
 #=====================================================================================#
 def telaInicio():
     print(header)
-    comandoInicio = str(input("Digite o comando\n|0|🔐 LOGIN\n|1|📃 CADASTRAR CLIENTE\n"))
+    comandoInicio = str(input("Digite o comando\n|0|🔐 LOGIN\n|1|📃 CADASTRAR USUÁRIO\n"))
     if(comandoInicio == str(0)):
-        # login()
         autenticarLogin()
     elif(comandoInicio == str(1)):
-        cadastro()
+        cadastroADM()
     else:
         telaInicio()
 #======================================================================================#
 #                            📦📮 Autenticação de Login 📦📮                         #
 #======================================================================================#
 def autenticarLogin():
-    usuario = str(input("Login\n>>>"))
-    senha = str(input("Senha\n>>>"))
+    usuario = input("Login\n>>>")
+    senha = input("Senha\n>>>")
 
-    if usuario == LOGIN and senha == SENHA:
+    cursor.execute("SELECT nome_adm,email_adm,senha_adm FROM tbl_adm WHERE email_adm = %s and senha_adm = %s;",(usuario,senha,))
+    login = cursor.fetchone()
+    if login == None:
+        print("Login ou usuário incorretos!\n")
+        time.sleep(2)
+        cursor.close()
+        telaInicio()
+    else:
+        admNome = login[0]
+        admLogin = login[1]
+        admSenha = login[2]
+    if usuario == admLogin and senha == admSenha:
+        print(('Seja Bem Vindo {} Ao...').format(admNome))
+        time.sleep(2)
+        cursor.close()
         main()
     else:
         print("Erro!\nUsuario ou senha incorretos!")
+        cursor.close()  
         telaInicio()
 #======================================================================================#
 #                           🏡👈❌ Remoção de Imoveis 🏡👈❌                        #
@@ -76,7 +90,7 @@ def removerImovel():
     else:
         removerImovel()
     cursor.close()
-    db.close
+    db.close()
 #=================================================================================================#
 #                                   ✍ Cadastro de Imoveis 📄                                    #
 #=================================================================================================#
@@ -91,16 +105,27 @@ def cadastroImovel():
     cep = str(input('Digite o Cep:\n>>> '))
     diaria = float(input('Digite o Valor da Diaria:\n>>> '))
     comodos = int(input('Digite Quantos comodos:\n>>> '))
-
-    cursor.execute(
+    print('deseja a cadastrar o seguinte imovel?\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}'.format(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
+    comando = input('|S| Sim \n|N| Não\n')
+    if comando.lower() == 's':
+        cursor.execute(
         "INSERT INTO TBL_imovel (descricao_imovel,estado_imovel,cidade_imovel,bairro_imovel,rua_imovel,numero_imovel,cep_imovel,diaria_imovel,comodos_imovel) " 
         "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);",(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
-    cursor.fetchone()
-    db.commit()
-    cursor.close
-    db.close
-    print('Dados Salvos! ✅')
-    main()
+        cursor.fetchone()
+        db.commit()
+        cursor.close
+        db.close()
+        print('Dados Salvos! ✅')
+        time.sleep(2)
+        main()
+    elif comando.lower() == "n":
+        print("Ok...")
+        time.sleep(2)
+        cadastroImovel()
+    else:
+        print('Voltando a pagina inicial...')
+        time.sleep(2)
+        main()
 #=================================================================================================#
 #                                        🏡 Tela de Inicio 🏡                                    # 
 #=================================================================================================#
@@ -141,7 +166,7 @@ def main():
         main()
     else:
         print("❗Comando invalido❗")
-        telaInicio()
+        main()
 #====================================================================================#
 #                               🔧Tela de alterar dados🔄                           #
 #====================================================================================#
@@ -334,7 +359,8 @@ def atualizarImovel():
 def listarImoveis():    
     print('Lista de Imoveis: \n')
     #Qtd de linhas do select
-    cursor.execute("SELECT * FROM TBL_imovel")
+    cursor.execute("SELECT * FROM tbl_imovel;")
+    cursor.fetchall()
     rows = cursor.fetchall()
     db.commit()
 
@@ -417,8 +443,8 @@ def cadastroClinte():
         "VALUES (%s,%s,%s,%s,%s);",(nome,email,telefone,senha,cpf))
     cursor.fetchone()
     db.commit()
-    cursor.close
-    db.close
+    cursor.close()
+    db.close()
     print('Dados Salvos! ✅')
     time.sleep(1.5)
     main()
@@ -446,9 +472,9 @@ def cadastroADM():
         "INSERT INTO TBL_adm (nome_adm,email_adm,senha_adm) " 
         "VALUES (%s,%s,%s);",(nome,email,senha))
     cursor.fetchone()
+    cursor.close()
     db.commit()
-    cursor.close
-    db.close
+    db.close()
     print('Dados Salvos! ✅')
     time.sleep(1.5)
     main()
@@ -661,3 +687,61 @@ def atualizarCliente():
 
         except ValueError:
             listarCliente()
+#=====================================================================================#
+#                        🔧✍🕴 Listar e Editar cliente 🔧✍🕴                       # 
+#=====================================================================================#
+def validadorDeCPF():
+    print('Validador de CPF')
+    cpf = input('Digite seu CPF:\n>>> ')  
+
+    # Remove pontos, traços e espaços (deixa apenas números)
+    cpf_numeros = ''.join(filter(str.isnumeric, cpf))#essa sequencia de funções pega todos os digitos da parte em que
+    #a pessoa digita o CPF e pega cada digito.
+
+    # função join: (''.join) a parte das aspas vazias é o espaço a ser preenchido no qual a pessoa irá preencher la em cima
+    #e a função join em si ela  é um método das strings usado para juntar elementos de uma lista (ou qualquer iterável) em uma única string,
+    #separando-os com um caractere ou string específico.
+
+    # função filter: A função filter() no Python é usada para filtrar elementos de um iterável (como listas, tuplas, strings, etc.) 
+    # com base em uma função que define um critério. Ela retorna um objeto iterador ( Iterador no Python = "Contador de Elementos Inteligente", ou seja oque eu manda ele mostrar apartir do ex: [0],[1]... ele mostra. ) 
+    # contendo apenas os elementos que atendem à condição especificada(como dito anteriormente [0],[1]...).
+
+    # str.isnumeric: A função str.isnumeric() em Python é usada para verificar se todos os caracteres de uma string são numéricos, incluindo dígitos comuns (0-9)
+
+    n1 = int(cpf_numeros[0]) #defini o primeiro digito para numero inteiro
+    resultadoN1 = n1 * 10 #usei a função anterior para fazer a conta necessaria para fazer o validador
+
+    n2 = int(cpf_numeros[1])
+    resultadoN2 = n2 * 9
+
+    n3 = int(cpf_numeros[2])
+    resultadoN3 = n3 * 8
+
+    n4 = int(cpf_numeros[3])
+    resultadoN4 = n4 * 7
+
+    n5 = int(cpf_numeros[4])
+    resultadoN5 = n5 * 6
+
+    n6 = int(cpf_numeros[5])
+    resultadoN6 = n6 * 5
+
+    n7 = int(cpf_numeros[6])
+    resultadoN7 = n7 * 4
+
+    n8 = int(cpf_numeros[7])
+    resultadoN8 = n8 * 3
+
+    n9 = int(cpf_numeros[8])
+    resultadoN9 = n9 * 2
+    #conta para validação, numero 1 * 10, numero 2 * 9, numero 3 * 8... e assim por diante até o numero 9, os dois ultimos numeros não entrão nessa soma.
+
+    r = ((resultadoN1 + resultadoN2 + resultadoN3 + resultadoN4 + resultadoN5 + resultadoN6 + resultadoN7 + resultadoN8 + resultadoN9) *10) %11
+
+    n10 = int(cpf_numeros[9])
+
+    resultadoN10 = n10 #numero que representa o resultado a ser alcançado, ou seja, o resultado do validador tem que ser esse
+
+    #conta a ser feita, todos os numeros depois da multiplicação, o resultado deles somados em seguida multiplicados por 10 e depois pegando o resto da divisão inteira por 11.
+    print('obs: se caso o resultado tiver sido 10, ele vale por 0')
+    print('o resultado a ser alcançado é de {} e o resultado obtido foi de {}'.format(n10,r))
