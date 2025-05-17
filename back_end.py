@@ -95,7 +95,7 @@ def cadastroImovel():
     cadastrandoImovel = True
     while cadastrandoImovel:
         print('Tela de cadastro, digite os dados abaixo: ✍ 📄\n')
-        print('Deixe o campo vazio e aperte "ENTER"\nPara cancelar❌')
+        print('Para cancelar❌:\nDeixe o campo vazio e aperte "ENTER"\n')
         descricao = str(input('Digite a Descricão:\n>>> '))
         if descricao == "":
             print("Saindo...\n")
@@ -194,6 +194,7 @@ def cadastroImovel():
             print('Voltando a pagina inicial...')
             time.sleep(2)
             break
+    cadastrandoImovel = False
     main()
 #=================================================================================================#
 #                                        🏡 Tela de Inicio 🏡                                    # 
