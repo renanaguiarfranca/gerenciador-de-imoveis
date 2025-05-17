@@ -524,19 +524,65 @@ def listarImoveis():
 #                             ✍ cadastro de Cliente ✍                              # 
 #=====================================================================================#
 def cadastroClinte():
-    nome = str(input('Digite seu Nome Completo:\n>>> '))
-    email = str(input('Digite seu Email:\n>>> '))
-    telefone = str(input('Digite seu Telefone:\n>>> '))
-    senha = str(input('Crie sua Senha Numerica:\n>>>'))
-    cpf = str(input('Digite seu CPF:\n>>> '))
+    cadastroCliente = True
+    while cadastroCliente:
+        print("Para cancelar❌\nDeixe o campo vazio e aperte 'ENTER'")
+        nome = str(input('Digite seu Nome Completo:\n>>> '))
+        if nome == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+        
+        email = str(input('Digite seu Email:\n>>> '))
+        if email == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+        telefone = str(input('Digite seu Telefone:\n>>> '))
+        if telefone == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+        senha = str(input('Crie sua Senha Numerica:\n>>>'))
+        if senha == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
 
-    cursor.execute(
-        "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,senha_cliente,cpf_cliente) " 
-        "VALUES (%s,%s,%s,%s,%s);",(nome,email,telefone,senha,cpf))
-    cursor.fetchone()
-    db.commit()
-    print('Dados Salvos! ✅')
-    time.sleep(1.5)
+        # VALIDAR????????????
+        cpf = str(input('Digite seu CPF:\n>>> '))
+        if cpf == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+
+        print("===Pronto para registro===\n")
+        print(">>>NOME| {}\n>>>EMAIL| {}\n>>>TELEFONE| {}\n>>>SENHA| {}\n>>>CPF| {}\n".format(nome, email, telefone,senha,cpf))
+        print("Os dados estão corretos?\n|S| Sim\n|N| Não")
+        resposta = input("\n>>>")
+        #####################
+        if resposta.lower() == "s":
+            cursor.execute(
+                "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,senha_cliente,cpf_cliente) " 
+                "VALUES (%s,%s,%s,%s,%s);",(nome,email,telefone,senha,cpf))
+            cursor.fetchone()
+            db.commit()
+            print('Dados Salvos! ✅')
+        else:
+            cadastroCliente = False
+            print("Saindo...\n")
+            time.sleep(1.5)
+            break
     main()
 #=====================================================================================#
 #                   🏡➕🏃‍♂️💨 Atribuir Cliente ao Imovel 🏡➕🏃‍♂️💨                   # 
@@ -610,7 +656,6 @@ def listarCliente():
                     print("Você digitou: {}...👀".format(pagina))
                     pagina = int(1)
                     time.sleep(1.2)
-        
             if type(pagina) == int:
                 ## CODIGO PARA VER MAIS PAGINAS
                 print("Buscando dados...⏳⚒")
@@ -672,7 +717,7 @@ def atualizarCliente():
                                 alt_nome = str(input('\n>>>'))
                             elif a.lower() == 'n':
                                 alt_nome = None  # Mantém como None para não atualizar
-                                print('OK\n ')
+                                print('OK\n')
                             else:
                                 print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
                                 time.sleep(3)
