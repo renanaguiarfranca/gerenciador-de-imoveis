@@ -3,7 +3,6 @@
 #=====================================================================================#
 from conection import *
 from pyfiglet import figlet_format
-from front_end import *
 import time
 from rich.console import Console
 from rich.table import Table
@@ -363,6 +362,8 @@ def listarImoveis():
     cursor.fetchall()
     rows = cursor.fetchall()
     db.commit()
+    cursor.close()
+    db.close()
 
     #O '//' na equação significa divisão sem resto; Numero de paginas será arredondando p baixo...e somarei + 1 se houver resto
     #Ex: 23 itens 23/5 = 4pg inteira + 1 pois há resto
@@ -371,15 +372,18 @@ def listarImoveis():
     #len = Comprimento (Quantidade de linhas/rows)
 
     cursor.execute("Select * from TBL_imovel LIMIT 5;")
+    cursor.fetchall()
     data = cursor.fetchall()
     db.commit()
+    cursor.close()
+    db.close()
     for resultado in data:
         print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
         # table = Table(show_header=True, header_style="bold magenta")
         # table.add_column("ID", style="dim", width=12)
         # table.add_row(str(resultado[0]))
         # print(table)
-    print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
+        print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
 
     def listandoImoveis():
         comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar imoveis🏡\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>>")
@@ -408,18 +412,22 @@ def listarImoveis():
                     cursor.execute("SELECT * FROM TBL_imovel LIMIT 5 OFFSET %s;", (ultimaPg,))
                     resultados = cursor.fetchall()
                     db.commit()
+                    cursor.close()
+                    db.close()
                     for resultado in resultados:
                         print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
-                    print("Você está na pagina: ",Qtd_paginas," De", Qtd_paginas)
-                    print("Numero da pagina maior que o limite de: {}😅\nExibindo Ultima Página\n".format(Qtd_paginas))
+                        print("Você está na pagina: ",Qtd_paginas," De", Qtd_paginas)
+                        print("Numero da pagina maior que o limite de: {}😅\nExibindo Ultima Página\n".format(Qtd_paginas))
                 else:
                     dadosDaPagina = (pagina*5)-5
                     cursor.execute("SELECT * FROM TBL_imovel LIMIT 5 OFFSET %s;", (dadosDaPagina,))
                     resultados = cursor.fetchall()
                     db.commit()
+                    cursor.close()
+                    db.close()
                     for resultado in resultados:
                         print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
-                    print("Você está na pagina: ",pagina," De", Qtd_paginas)
+                        print("Você está na pagina: ",pagina," De", Qtd_paginas)
 
                 listandoImoveis()
             else:
