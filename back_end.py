@@ -16,7 +16,7 @@ cadastrandoImovel = False
 #=====================================================================================#
 def telaInicio():
     print(header)
-    comandoInicio = str(input("Digite o comando\n|0|🔐 LOGIN\n|1|📃 CADASTRAR USUÁRIO\n"))
+    comandoInicio = str(input(">>>Digite o comando\n|0|🔐 >>>LOGIN\n|1|📃 CADASTRAR USUÁRIO\n>>> "))
     if(comandoInicio == str(0)):
         autenticarLogin()
     elif(comandoInicio == str(1)):
@@ -27,8 +27,8 @@ def telaInicio():
 #                            📦📮 Autenticação de Login 📦📮                         #
 #======================================================================================#
 def autenticarLogin():
-    usuario = input("Login\n>>>")
-    senha = input("Senha\n>>>")
+    usuario = input("Login\n>>> ")
+    senha = input("Senha\n>>> ")
     cursor.execute("SELECT nome_adm,email_adm,senha_adm FROM tbl_adm WHERE email_adm = %s and senha_adm = %s;",(usuario,senha,))
     login = cursor.fetchone()
     if login == None:
@@ -102,7 +102,7 @@ def cadastroImovel():
     while cadastrandoImovel:
         print('Tela de cadastro, digite os dados abaixo: ✍ 📄\n')
         print('Para cancelar❌:\nDeixe o campo vazio e aperte "ENTER"\n')
-        descricao = str(input('Digite a Descricão:\n>>> '))
+        descricao = str(input('Digite a Descricão:\n>>>  '))
         if descricao == "":
             print("Saindo...\n")
             time.sleep(1)
@@ -171,7 +171,7 @@ def cadastroImovel():
                                 continue
                         #SE NÃO DIGITOU DA ERRO E VOLTA E DA O EXEMPLO
                         except ValueError:
-                            print("Vamos tentar novamente🔄️\n>>>")
+                            print("Vamos tentar novamente🔄️\n>>> ")
                             time.sleep(1)
 
         comodos = int(input('Digite Quantos comodos:\n>>> '))
@@ -248,7 +248,7 @@ def main():
 def atualizarImovel():
     print('Atualizar Dados🛠\n')
     #Pede o ID do imovel a ser atualizado
-    comando = input("Comandos Disponiveis: \n|D| Detalhes\n|S| Sair\nID que deseja alterar🔧\n>>>")
+    comando = input("Comandos Disponiveis: \n|D| Detalhes\n|S| Sair\nID que deseja alterar🔧\n>>> ")
     try:
         if comando.lower() == str("d"):
             print("Indo para Listagem de imoveis🏡...")
@@ -271,87 +271,87 @@ def atualizarImovel():
                 else:
                     try:
                         #ESTADO
-                        a = input('\nAlterar Estado?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[2]))
+                        a = input('\nAlterar Estado?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[2]))
                         if a.lower() == 's':
-                            alt_estado = str(input('\n>>>'))
+                            alt_estado = str(input('\n>>> '))
                         elif a.lower() == 'n':
                             alt_estado = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #CIDADE
-                        b = input('Alterar Cidade?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[3]))
+                        b = input('Alterar Cidade?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[3]))
                         if b.lower() == 's':
-                            alt_cidade = str(input('\n>>>'))
+                            alt_cidade = str(input('\n>>> '))
                         elif b.lower() == 'n':
                             alt_cidade = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #BAIRRO
-                        c = input('Alterar Bairro?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[4]))
+                        c = input('Alterar Bairro?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[4]))
                         if c.lower() == 's':
-                            alt_bairro = str(input('\n>>>'))
+                            alt_bairro = str(input('\n>>> '))
                         elif c.lower() == 'n':
                             alt_bairro = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #RUA
-                        d = input('Alterar Rua?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[5]))
+                        d = input('Alterar Rua?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[5]))
                         if d.lower() == 's':
-                            alt_rua = str(input('\n>>>'))
+                            alt_rua = str(input('\n>>> '))
                         elif d.lower() == 'n':
                             alt_rua = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #NUMERO
-                        e = input('Alterar Numero?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[6]))
+                        e = input('Alterar Numero?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[6]))
                         if e.lower() == 's':
-                            alt_numero = str(input('\n>>>'))
+                            alt_numero = str(input('\n>>> '))
                         elif e.lower() == 'n':
                             alt_numero = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #CEP
-                        f = input('Alterar CEP?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[7]))
+                        f = input('Alterar CEP?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[7]))
                         if f.lower() == 's':
-                            alt_cep = str(input('\n>>>'))
+                            alt_cep = str(input('\n>>> '))
                         elif f.lower() == 'n':
                             alt_cep = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #VALOR DIARIA
-                        g = input('Alterar Valor Diaria?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[8]))
+                        g = input('Alterar Valor Diaria?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[8]))
                         if g.lower() == 's':
-                            alt_diaria = str(input('\n>>>'))
+                            alt_diaria = str(input('\n>>> '))
                             try:
                                 #VERIFICA SE ESCREVEU CERTO
                                 alt_floatDiaria = float(alt_diaria)
@@ -365,7 +365,7 @@ def atualizarImovel():
                             except ValueError:
                                 # VAMOS FICAR AQUI ATÉ ELA RESOLVER DIGITAR CORRETAMENTE:
                                 while type(alt_diaria) != float:
-                                    alt_diaria = input('Digite o Valor da Diaria de forma correta.\nEX: {}\n>>> '.format(resultados[8]))
+                                    alt_diaria = input('Digite o Valor da Diaria de forma correta.\nEX: {}\n>>>  '.format(resultados[8]))
                                     #VERIFICA SE DIGITOU CERTO
                                     try:
                                         alt_floatDiaria = float(alt_diaria)
@@ -374,26 +374,26 @@ def atualizarImovel():
                                             continue
                                     #SE NÃO DIGITOU DA ERRO E VOLTA E DA O EXEMPLO
                                     except ValueError:
-                                        print("Vamos tentar novamente🔄️\n>>>")
+                                        print("Vamos tentar novamente🔄️\n>>> ")
                                         time.sleep(1)
                         elif g.lower() == 'n':
                             alt_diaria = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
                             atualizarImovel()
                         #QUANTIDADE COMODOS
-                        h = input('Alterar Quantidade de Comodos?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[9]))
+                        h = input('Alterar Quantidade de Comodos?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[9]))
                         if h.lower() == 's':
-                            alt_comodos = str(input('\n>>>'))
+                            alt_comodos = str(input('\n>>> '))
                         elif h.lower() == 'n':
                             alt_comodos = None  # Mantém como None para não atualizar
                             print('OK\n ')
                         else:
-                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                            print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
                             print("Retornando ao inicio...🔄")
                             time.sleep(1.2)
@@ -467,7 +467,7 @@ def listarImoveis():
     cursor.execute("Select * from TBL_imovel LIMIT 5;")
     data = cursor.fetchall()
     for resultado in data:
-        print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
+        print(f"\n>>> ID: {resultado[0]} |\n>>> {resultado[1]} |\n>>> Estado: {resultado[2]} |\n>>> Cidade: {resultado[3]} |\n>>> Bairro: {resultado[4]} |\n>>> Rua: {resultado[5]} |\n>>> Numero: {resultado[6]} |\n>>> Cep: {resultado[7]} |\n>>> Diaria: {resultado[8]} |\n>>> Comodos: {resultado[9]}")
         # table = Table(show_header=True, header_style="bold magenta")
         # table.add_column("ID", style="dim", width=12)
         # table.add_row(str(resultado[0]))
@@ -475,7 +475,7 @@ def listarImoveis():
         print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
 
     def listandoImoveis():
-        comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar imoveis🏡\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>>")
+        comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar imoveis🏡\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>> ")
         #EXECUTA O CODIGO DE ACORDO COM O INPUT
         try:
             if comando.lower() == "s":
@@ -501,7 +501,7 @@ def listarImoveis():
                     cursor.execute("SELECT * FROM TBL_imovel LIMIT 5 OFFSET %s;", (ultimaPg,))
                     resultados = cursor.fetchall()
                     for resultado in resultados:
-                        print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
+                        print(f"\n>>> ID: {resultado[0]} |\n>>> {resultado[1]} |\n>>> Estado: {resultado[2]} |\n>>> Cidade: {resultado[3]} |\n>>> Bairro: {resultado[4]} |\n>>> Rua: {resultado[5]} |\n>>> Numero: {resultado[6]} |\n>>> Cep: {resultado[7]} |\n>>> Diaria: {resultado[8]} |\n>>> Comodos: {resultado[9]}")
                         print("Você está na pagina: ",Qtd_paginas," De", Qtd_paginas)
                         print("Numero da pagina maior que o limite de: {}😅\nExibindo Ultima Página\n".format(Qtd_paginas))
                 else:
@@ -509,14 +509,14 @@ def listarImoveis():
                     cursor.execute("SELECT * FROM TBL_imovel LIMIT 5 OFFSET %s;", (dadosDaPagina,))
                     resultados = cursor.fetchall()
                     for resultado in resultados:
-                        print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
+                        print(f"\n>>> ID: {resultado[0]} |\n>>> {resultado[1]} |\n>>> Estado: {resultado[2]} |\n>>> Cidade: {resultado[3]} |\n>>> Bairro: {resultado[4]} |\n>>> Rua: {resultado[5]} |\n>>> Numero: {resultado[6]} |\n>>> Cep: {resultado[7]} |\n>>> Diaria: {resultado[8]} |\n>>> Comodos: {resultado[9]}")
                         print("Você está na pagina: ",pagina," De", Qtd_paginas)
 
                 listandoImoveis()
             else:
                 print("Comando inválido🤔")
         except ValueError:  # Se não conseguir converter para int
-            print("ERRO!\nDigite apenas 👉números inteiros👈 para as paginas ou 'S' para sair.🤙\n>>>")
+            print("ERRO!\nDigite apenas 👉números inteiros👈 para as paginas ou 'S' para sair.🤙\n>>> ")
             listandoImoveis()
     listandoImoveis()
 #=====================================================================================#
@@ -549,9 +549,36 @@ def cadastroClinte():
             main()
             break
 
-        # VALIDAR????????????
-        cpf = str(input('Digite seu CPF:\n>>> '))
-        if cpf == "":
+        # VALIDADOR DE CPF
+        cpf = input('Digite Seu CPF\n>>> ')
+        d1 = int(cpf[0]) * 10
+        d2 = int(cpf[1]) * 9
+        d3 = int(cpf[2]) * 8
+        d4 = int(cpf[3]) * 7
+        d5 = int(cpf[4]) * 6
+        d6 = int(cpf[5]) * 5
+        d7 = int(cpf[6]) * 4
+        d8 = int(cpf[7]) * 3
+        d9 = int(cpf[8]) * 2
+        d10 = int(cpf[9]) 
+
+        soma = d1+d2+d3+d4+d5+d6+d7+d8+d9
+        multiplicacao = soma * 10
+        restDivisao = multiplicacao % 11
+
+        if restDivisao == 10:
+            restDivisao = 0
+        if restDivisao == d10:
+            print('Validando seu CPF...')
+            time.sleep(1)
+            print('Sucesso! Seu CPF é valido!')
+            time.sleep(1)
+        else:
+            print('CPF INVALIDO!!!')
+            print('Retornando ao Inicio...')
+            time.sleep(1)
+            main()
+        if cpf == "":    
             print("Saindo...\n")
             time.sleep(1)
             cadastroCliente = False
@@ -559,13 +586,13 @@ def cadastroClinte():
             break
 
         print("===Pronto para registro===\n")
-        print(">>>NOME| {}\n>>>EMAIL| {}\n>>>TELEFONE| {}\n>>>CPF| {}\n".format(nome, email, telefone,cpf))
+        print(">>> NOME| {}\n>>> EMAIL| {}\n>>> TELEFONE| {}\n>>> CPF| {}\n".format(nome, email, telefone,cpf))
         print("Os dados estão corretos?\n|S| Sim\n|N| Não")
-        resposta = input("\n>>>")
+        resposta = input("\n>>> ")
         #####################
         if resposta.lower() == "s":
             cursor.execute(
-                "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,cpf_cliente) " 
+                "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,cpf_cliente)" 
                 "VALUES (%s,%s,%s,%s);",(nome,email,telefone,cpf))
             cursor.fetchone()
             db.commit()
@@ -582,8 +609,8 @@ def cadastroClinte():
 #=====================================================================================#
 def atribuirCliente():
     print('Tela para Atribuir Cliente ao Imovel🏡🏃💨\n')
-    idCliente = str(input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>>'))
-    idImovel = str(input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>>'))
+    idCliente = str(input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>> '))
+    idImovel = str(input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>> '))
     cursor.execute(
      "UPDATE TBL_imovel SET fk_TBL_imovel_id_cliente = %s WHERE id_imovel = %s;",(idCliente,idImovel))
     cursor.fetchone()
@@ -625,7 +652,7 @@ def listarCliente():
     data = cursor.fetchall()
     db.commit()
     for resultado in data:
-        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>CPF: {resultado[4]}")
+        print(f"\n>>> ID: {resultado[0]} |\n>>> Nome: {resultado[1]} |\n>>> Email: {resultado[2]} |\n>>> Telefone: {resultado[3]} |\n>>> CPF: {resultado[4]}")
         # table = Table(show_header=True, header_style="bold magenta")
         # table.add_column("ID", style="dim", width=12)
         # table.add_row(str(resultado[0]))
@@ -633,7 +660,7 @@ def listarCliente():
     print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
 
     def listandoCliente():
-        comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar um cliente🏡\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>>")
+        comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar um cliente🏡\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>> ")
         #EXECUTA O CODIGO DE ACORDO COM O INPUT
         try:
             if comando.lower() == "s":
@@ -659,7 +686,7 @@ def listarCliente():
                     resultados = cursor.fetchall()
                     db.commit()
                     for resultado in resultados:
-                        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>CPF : {resultado[4]} ")
+                        print(f"\n>>> ID: {resultado[0]} |\n>>> Nome: {resultado[1]} |\n>>> Email: {resultado[2]} |\n>>> Telefone: {resultado[3]} |\n>>> CPF : {resultado[4]} ")
                     print("Você está na pagina: ",Qtd_paginas," De", Qtd_paginas)
                     print("Numero da pagina maior que o limite de: {}😅\nExibindo Ultima Página\n".format(Qtd_paginas))
                 else:
@@ -668,20 +695,20 @@ def listarCliente():
                     resultados = cursor.fetchall()
                     db.commit()
                     for resultado in resultados:
-                        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>CPF: {resultado[4]}")
+                        print(f"\n>>> ID: {resultado[0]} |\n>>> Nome: {resultado[1]} |\n>>> Email: {resultado[2]} |\n>>> Telefone: {resultado[3]} |\n>>> CPF: {resultado[4]}")
                     print("Você está na pagina: ",pagina," De", Qtd_paginas)
 
                 listandoCliente()
             else:
                 print("Comando inválido🤔")
         except ValueError:  # Se não conseguir converter para int
-            print("ERRO!\nDigite apenas 👉números inteiros👈 para as paginas ou 'S' para sair.🤙\n>>>")
+            print("ERRO!\nDigite apenas 👉números inteiros👈 para as paginas ou 'S' para sair.🤙\n>>> ")
             listandoCliente()
     listandoCliente()
 def atualizarCliente():
         print('Atualizar Dados🛠\n')
         #Pede o ID do imovel a ser atualizado
-        comando = input("Comandos Disponiveis: \n|D| Detalhes\n|S| Sair\nID que deseja alterar🔧\n>>>")
+        comando = input("Comandos Disponiveis: \n|D| Detalhes\n|S| Sair\nID que deseja alterar🔧\n>>> ")
         try:
             if comando.lower() == str("d"):
                 print("Indo para Listagem de Clientes🙅...")
@@ -705,53 +732,79 @@ def atualizarCliente():
                     else:
                         try:
                             #NOME CLIENTE
-                            a = input('Alterar Nome?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[1]))
+                            a = input('Alterar Nome?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[1]))
                             if a.lower() == 's':
-                                alt_nome = str(input('\n>>>'))
+                                alt_nome = str(input('\n>>> '))
                             elif a.lower() == 'n':
                                 alt_nome = None  # Mantém como None para não atualizar
                                 print('OK\n')
                             else:
-                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                                 time.sleep(3)
                                 print("Retornando ao inicio...🔄")
                                 time.sleep(1.2)
                                 atualizarCliente()
                             #EMAIL
-                            b = input('Alterar Email?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[2]))
+                            b = input('Alterar Email?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[2]))
                             if b.lower() == 's':
-                                alt_email = str(input('\n>>>'))
+                                alt_email = str(input('\n>>> '))
                             elif b.lower() == 'n':
                                 alt_email = None  # Mantém como None para não atualizar
                                 print('OK\n ')
                             else:
-                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                                 time.sleep(3)
                                 print("Retornando ao inicio...🔄")
                                 time.sleep(1.2)
                                 atualizarCliente()
                             #TELEFONE
-                            c = input('Alterar Telefone?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[3]))
+                            c = input('Alterar Telefone?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[3]))
                             if c.lower() == 's':
-                                alt_telefone = str(input('\n>>>'))
+                                alt_telefone = str(input('\n>>> '))
                             elif c.lower() == 'n':
                                 alt_telefone = None  # Mantém como None para não atualizar
                                 print('OK\n ')
                             else:
-                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                                 time.sleep(3)
                                 print("Retornando ao inicio...🔄")
                                 time.sleep(1.2)
                                 atualizarCliente()
                             #CPF
-                            d = input('Alterar CPF?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[4]))
+                            d = input('Alterar CPF?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[4]))
                             if d.lower() == 's':
-                                alt_cpf = str(input('\n>>>'))
+                                alt_cpf = input('Digite Seu CPF\n>>> ')
+                                d1 = int(alt_cpf[0]) * 10
+                                d2 = int(alt_cpf[1]) * 9
+                                d3 = int(alt_cpf[2]) * 8
+                                d4 = int(alt_cpf[3]) * 7
+                                d5 = int(alt_cpf[4]) * 6
+                                d6 = int(alt_cpf[5]) * 5
+                                d7 = int(alt_cpf[6]) * 4
+                                d8 = int(alt_cpf[7]) * 3
+                                d9 = int(alt_cpf[8]) * 2
+                                d10 = int(alt_cpf[9]) 
+
+                                soma = d1+d2+d3+d4+d5+d6+d7+d8+d9
+                                multiplicacao = soma * 10
+                                restDivisao = multiplicacao % 11
+
+                                if restDivisao == 10:
+                                    restDivisao = 0
+                                if restDivisao == d10:
+                                    print('Validando seu CPF...')
+                                    time.sleep(1)
+                                    print('Sucesso! Seu CPF é valido!')
+                                    time.sleep(1)
+                                else:
+                                    print('CPF INVALIDO!!!, Retornando ao Inicio...')
+                                    time.sleep(1)
+                                    atualizarCliente()
                             elif d.lower() == 'n':
                                 alt_cpf = None  # Mantém como None para não atualizar
                                 print('OK\n ')
                             else:
-                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
+                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                                 time.sleep(3)
                                 print("Retornando ao inicio...🔄")
                                 time.sleep(1.2)
@@ -795,65 +848,3 @@ def atualizarCliente():
 
         except ValueError:
             listarCliente()
-#=====================================================================================#
-#                                ⚙ Validador de CPF ⚙                                # 
-#=====================================================================================#
-def validadorDeCPF():
-    print('Validador de CPF')
-    cpf = input('Digite seu CPF:\n>>> ')  
-
-    # Remove pontos, traços e espaços (deixa apenas números)
-    cpf_numeros = ''.join(filter(str.isnumeric, cpf))#essa sequencia de funções pega todos os digitos da parte em que
-    #a pessoa digita o CPF e pega cada digito.
-
-    # função join: (''.join) a parte das aspas vazias é o espaço a ser preenchido no qual a pessoa irá preencher la em cima
-    #e a função join em si ela  é um método das strings usado para juntar elementos de uma lista (ou qualquer iterável) em uma única string,
-    #separando-os com um caractere ou string específico.
-
-    # função filter: A função filter() no Python é usada para filtrar elementos de um iterável (como listas, tuplas, strings, etc.) 
-    # com base em uma função que define um critério. Ela retorna um objeto iterador ( Iterador no Python = "Contador de Elementos Inteligente", ou seja oque eu manda ele mostrar apartir do ex: [0],[1]... ele mostra. ) 
-    # contendo apenas os elementos que atendem à condição especificada(como dito anteriormente [0],[1]...).
-
-    # str.isnumeric: A função str.isnumeric() em Python é usada para verificar se todos os caracteres de uma string são numéricos, incluindo dígitos comuns (0-9)
-
-    n1 = int(cpf_numeros[0]) #defini o primeiro digito para numero inteiro
-    resultadoN1 = n1 * 10 #usei a função anterior para fazer a conta necessaria para fazer o validador
-
-    n2 = int(cpf_numeros[1])
-    resultadoN2 = n2 * 9
-
-    n3 = int(cpf_numeros[2])
-    resultadoN3 = n3 * 8
-
-    n4 = int(cpf_numeros[3])
-    resultadoN4 = n4 * 7
-
-    n5 = int(cpf_numeros[4])
-    resultadoN5 = n5 * 6
-
-    n6 = int(cpf_numeros[5])
-    resultadoN6 = n6 * 5
-
-    n7 = int(cpf_numeros[6])
-    resultadoN7 = n7 * 4
-
-    n8 = int(cpf_numeros[7])
-    resultadoN8 = n8 * 3
-
-    n9 = int(cpf_numeros[8])
-    resultadoN9 = n9 * 2
-    #conta para validação, numero 1 * 10, numero 2 * 9, numero 3 * 8... e assim por diante até o numero 9, os dois ultimos numeros não entrão nessa soma.
-
-    r = ((resultadoN1 + resultadoN2 + resultadoN3 + resultadoN4 + resultadoN5 + resultadoN6 + resultadoN7 + resultadoN8 + resultadoN9) *10) %11
-
-    n10 = int(cpf_numeros[9])
-
-    resultadoN10 = n10 #numero que representa o resultado a ser alcançado, ou seja, o resultado do validador tem que ser esse
-
-    #conta a ser feita, todos os numeros depois da multiplicação, o resultado deles somados em seguida multiplicados por 10 e depois pegando o resto da divisão inteira por 11.
-    if r == 10:
-        r = 0
-    if n10 == r:
-        print("seu CPF está correto")
-    else:
-        print('CPF INVALIDO!!!')
