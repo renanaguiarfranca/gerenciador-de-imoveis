@@ -1,14 +1,18 @@
 #=====================================================================================#
-#                                    📃 Conexões 📃                                  # 
+#                                    📃 Imports 📃                                   # 
 #=====================================================================================#
 from conection import *
 from pyfiglet import figlet_format
 import time
 from rich.console import Console
 from rich.table import Table
-header = (figlet_format('ARBINHO', font = "cosmic"))
 #=====================================================================================#
-#                                📃 Tela de cadastro 📃                              # 
+#                                📃 Variaveis Globais 📃                             # 
+#=====================================================================================#
+header = (figlet_format('ARBINHO', font = "cosmic")) #NOME ARBINHO
+cadastrandoImovel = False
+#=====================================================================================#
+#                                📃 Tela Index 📃                                    # 
 #=====================================================================================#
 def telaInicio():
     print(header)
@@ -25,13 +29,11 @@ def telaInicio():
 def autenticarLogin():
     usuario = input("Login\n>>>")
     senha = input("Senha\n>>>")
-
     cursor.execute("SELECT nome_adm,email_adm,senha_adm FROM tbl_adm WHERE email_adm = %s and senha_adm = %s;",(usuario,senha,))
     login = cursor.fetchone()
     if login == None:
         print("Login ou usuário incorretos!\n")
         time.sleep(2)
-        cursor.close()
         telaInicio()
     else:
         admNome = login[0]
@@ -40,11 +42,9 @@ def autenticarLogin():
     if usuario == admLogin and senha == admSenha:
         print(('Seja Bem Vindo {} Ao...').format(admNome))
         time.sleep(2)
-        cursor.close()
         main()
     else:
         print("Erro!\nUsuario ou senha incorretos!")
-        cursor.close()  
         telaInicio()
 #======================================================================================#
 #                           🏡👈❌ Remoção de Imoveis 🏡👈❌                        #
@@ -73,9 +73,15 @@ def removerImovel():
     if resultados:
         print("\nDados do imóvel encontrado:")
         print(f"ID: {resultados[0]}")
-        print(f"Endereço: {resultados[1]}")
-        print(f"Tipo: {resultados[3]}")
-        print(f"Valor: {resultados[4]}")
+        print(f"Descrição: {resultados[1]}")
+        print(f"Estado: {resultados[2]}")
+        print(f"Cidade: {resultados[3]}")
+        print(f"Bairro: {resultados[4]}")
+        print(f"Rua: {resultados[5]}")
+        print(f"Numero: {resultados[6]}")
+        print(f"Cep: {resultados[7]}")
+        print(f"Diaria: {resultados[8]}")
+        print(f"Comodos: {resultados[9]}")
         confirmacao = input("\nDeseja remover este imóvel? (Sim = S / Não = N): \n")
         if confirmacao.lower() == 's':
                 # Remover o imóvel
@@ -88,51 +94,120 @@ def removerImovel():
             removerImovel()
     else:
         removerImovel()
-    cursor.close()
-    db.close()
 #=================================================================================================#
 #                                   ✍ Cadastro de Imoveis 📄                                    #
 #=================================================================================================#
 def cadastroImovel():
-    print('Tela de cadstro, digite os dados abaixo: ✍ 📄\n ')
-    descricao = str(input('Digite a Descricão:\n>>> '))
-    estado = str(input('Digite o Estado:\n>>> '))
-    cidade = str(input('Digite a Cidade:\n>>> '))
-    bairro = str(input('Digite o Bairro:\n>>> '))
-    rua = str(input('Digite a Rua:\n>>> '))
-    numero = str(input('Digite o Numero:\n>>> '))
-    cep = str(input('Digite o Cep:\n>>> '))
-    diaria = float(input('Digite o Valor da Diaria:\n>>> '))
-    comodos = int(input('Digite Quantos comodos:\n>>> '))
-    print('deseja a cadastrar o seguinte imovel?\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}'.format(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
-    comando = input('|S| Sim \n|N| Não\n')
-    if comando.lower() == 's':
-        cursor.execute(
-        "INSERT INTO TBL_imovel (descricao_imovel,estado_imovel,cidade_imovel,bairro_imovel,rua_imovel,numero_imovel,cep_imovel,diaria_imovel,comodos_imovel) " 
-        "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);",(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
-        cursor.fetchone()
-        db.commit()
-        cursor.close
-        db.close()
-        print('Dados Salvos! ✅')
-        time.sleep(2)
-        main()
-    elif comando.lower() == "n":
-        print("Ok...")
-        time.sleep(2)
-        cadastroImovel()
-    else:
-        print('Voltando a pagina inicial...')
-        time.sleep(2)
-        main()
+    cadastrandoImovel = True
+    while cadastrandoImovel:
+        print('Tela de cadastro, digite os dados abaixo: ✍ 📄\n')
+        print('Para cancelar❌:\nDeixe o campo vazio e aperte "ENTER"\n')
+        descricao = str(input('Digite a Descricão:\n>>> '))
+        if descricao == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+        estado = str(input('Digite o Estado:\n>>> '))
+        if estado == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+        cidade = str(input('Digite a Cidade:\n>>> '))
+        if cidade == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+        bairro = str(input('Digite o Bairro:\n>>> '))
+        if bairro == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+        rua = str(input('Digite a Rua:\n>>> '))
+        if rua == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+
+        #PODE TER LETRA EX: 123-B
+        numero = input('Digite o Numero:\n>>> ')
+        if numero == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+
+        #NECESSARIO VALIDAR??
+        cep = str(input('Digite o Cep:\n>>> '))
+        if cep == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+
+        #VERIFICAR SE DIÁRIA É NUMERO E/OU FLOAT
+        diaria = input('Digite o Valor da Diaria:\n>>> ')
+        if diaria == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+        else:
+            try:
+                #VERIFICA SE ESCREVEU CERTO
+                floatDiaria = float(diaria)
+                if type(floatDiaria) == float:
+                    diaria = floatDiaria
+                #SE ESCREVEU ERRADO MANDA MENSAGEM E VAI PARA O EXCEPT:
+                else:
+                    print("Diária digitada de forma errada...\n")
+                    print("Você digitou:",diaria)
+                    time.sleep(2)
+            except ValueError:
+                    # VAMOS FICAR AQUI ATÉ ELA RESOLVER DIGITAR CORRETAMENTE:
+                    while type(diaria) != float:
+                        diaria = input('Digite o Valor da Diaria de forma correta.\nEX: 199.99\n>>> ')
+                        #VERIFICA SE DIGITOU CERTO
+                        try:
+                            floatDiaria = float(diaria)
+                            if type(floatDiaria) == float:
+                                diaria = floatDiaria
+                                continue
+                        #SE NÃO DIGITOU DA ERRO E VOLTA E DA O EXEMPLO
+                        except ValueError:
+                            print("Vamos tentar novamente🔄️\n>>>")
+                            time.sleep(1)
+
+        comodos = int(input('Digite Quantos comodos:\n>>> '))
+        if comodos == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            break
+        print('deseja a cadastrar o seguinte imovel?\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}'.format(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
+        comando = input('|S| Sim \n|N| Não\n')
+        if comando.lower() == 's':
+            cursor.execute(
+            "INSERT INTO TBL_imovel (descricao_imovel,estado_imovel,cidade_imovel,bairro_imovel,rua_imovel,numero_imovel,cep_imovel,diaria_imovel,comodos_imovel) " 
+            "VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s);",(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
+            cursor.fetchone()
+            db.commit()
+            print('Dados Salvos! ✅')
+            time.sleep(2)
+            main()
+            cadastrandoImovel = False
+        elif comando.lower() == "n":
+            print("Ok...")
+            time.sleep(2)
+        else:
+            print('Voltando a pagina inicial...')
+            time.sleep(2)
+            break
+    cadastrandoImovel = False
+    main()
 #=================================================================================================#
 #                                        🏡 Tela de Inicio 🏡                                    # 
 #=================================================================================================#
 def main():
     print(header)
     print("Bem vindo(a) ao ARBINHO 🏡")
-    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃‍♂️💨\n|8| Adicionar ADM...👨‍💻\n")
-    print("|0| CANCELAR❌")
+    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨‍💻\n")
+    print("|0| SAIR❌")
     comando = str(input("Digite o comando:\n"))
 
     if(comando == str(1)):
@@ -154,14 +229,15 @@ def main():
         print("Listar e Editar Cientes...🔧✍🕴")
         listarCliente()
     elif(comando == str(7)):
-        print("Atribuir Cliente ao Imovel...🏡🏃‍♂️💨")
+        print("Atribuir Cliente ao Imovel...🏡🏃💨")
         time.sleep(1.5)
         atribuirCliente()
     elif(comando == str(8)):
         print("Adicionar ADM👨‍💻")
         cadastroADM()
     elif(comando == str(0)):
-        print("SAINDO...🏃‍♂️ 💨")
+        print("SAINDO...🏃💨")
+        telaInicio()
         main()
     else:
         print("❗Comando invalido❗")
@@ -179,7 +255,7 @@ def atualizarImovel():
             time.sleep(1.2)
             listarImoveis()
         elif comando.lower() == "s":
-            print("Saindo...🏃‍♂️💨")
+            print("Saindo...🏃💨")
             time.sleep(1.2)
             main()
         else:
@@ -187,7 +263,6 @@ def atualizarImovel():
             if type(idAtt) == int:
                 cursor.execute("SELECT * FROM TBL_imovel WHERE id_imovel = %s", (idAtt,))
                 resultados = cursor.fetchone()
-                db.commit()
                 print("===Você está editando🔧✍===\n|ID:ㅤ{}\n|DESCRIÇÃO:ㅤ{}\n|ESTADO:ㅤ{}\n|CIDADE:ㅤ{}\n|BAIRRO:ㅤ{}\n|RUA:ㅤ{}\n|NUMERO:ㅤ{}\n|CEP:ㅤ{}\n|DIARIA:ㅤ{}\n|COMODOS:ㅤ{}".format(resultados[0],resultados[1],resultados[2], resultados[3], resultados[4], resultados[5], resultados[6], resultados[7], resultados[8],resultados[9]))
                 if resultados == None:
                     print('Nenhum Resultado Para esse ID🙄❌❗\n')
@@ -196,7 +271,7 @@ def atualizarImovel():
                 else:
                     try:
                         #ESTADO
-                        a = input('Alterar Estado?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[2]))
+                        a = input('\nAlterar Estado?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[2]))
                         if a.lower() == 's':
                             alt_estado = str(input('\n>>>'))
                         elif a.lower() == 'n':
@@ -277,6 +352,30 @@ def atualizarImovel():
                         g = input('Alterar Valor Diaria?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[8]))
                         if g.lower() == 's':
                             alt_diaria = str(input('\n>>>'))
+                            try:
+                                #VERIFICA SE ESCREVEU CERTO
+                                alt_floatDiaria = float(alt_diaria)
+                                if type(alt_floatDiaria) == float:
+                                    alt_diaria = alt_floatDiaria
+                                #SE ESCREVEU ERRADO MANDA MENSAGEM E VAI PARA O EXCEPT:
+                                else:
+                                    print("Diária digitada de forma errada...\n")
+                                    print("Você digitou:",alt_diaria)
+                                    time.sleep(2)
+                            except ValueError:
+                                # VAMOS FICAR AQUI ATÉ ELA RESOLVER DIGITAR CORRETAMENTE:
+                                while type(alt_diaria) != float:
+                                    alt_diaria = input('Digite o Valor da Diaria de forma correta.\nEX: {}\n>>> '.format(resultados[8]))
+                                    #VERIFICA SE DIGITOU CERTO
+                                    try:
+                                        alt_floatDiaria = float(alt_diaria)
+                                        if type(alt_floatDiaria) == float:
+                                            alt_diaria = alt_floatDiaria
+                                            continue
+                                    #SE NÃO DIGITOU DA ERRO E VOLTA E DA O EXEMPLO
+                                    except ValueError:
+                                        print("Vamos tentar novamente🔄️\n>>>")
+                                        time.sleep(1)
                         elif g.lower() == 'n':
                             alt_diaria = None  # Mantém como None para não atualizar
                             print('OK\n ')
@@ -335,8 +434,6 @@ def atualizarImovel():
                             cursor.execute(query, params)
                             db.commit()
                             print("Alterando dados...⏳")
-                            cursor.close()
-                            db.close()
                             time.sleep(2)
                             print('Dados Alterados!🔧✅')
                             time.sleep(3)
@@ -359,11 +456,7 @@ def listarImoveis():
     print('Lista de Imoveis: \n')
     #Qtd de linhas do select
     cursor.execute("SELECT * FROM tbl_imovel;")
-    cursor.fetchall()
     rows = cursor.fetchall()
-    db.commit()
-    cursor.close()
-    db.close()
 
     #O '//' na equação significa divisão sem resto; Numero de paginas será arredondando p baixo...e somarei + 1 se houver resto
     #Ex: 23 itens 23/5 = 4pg inteira + 1 pois há resto
@@ -372,11 +465,7 @@ def listarImoveis():
     #len = Comprimento (Quantidade de linhas/rows)
 
     cursor.execute("Select * from TBL_imovel LIMIT 5;")
-    cursor.fetchall()
     data = cursor.fetchall()
-    db.commit()
-    cursor.close()
-    db.close()
     for resultado in data:
         print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
         # table = Table(show_header=True, header_style="bold magenta")
@@ -411,9 +500,6 @@ def listarImoveis():
                     ultimaPg = (Qtd_paginas*5)-5
                     cursor.execute("SELECT * FROM TBL_imovel LIMIT 5 OFFSET %s;", (ultimaPg,))
                     resultados = cursor.fetchall()
-                    db.commit()
-                    cursor.close()
-                    db.close()
                     for resultado in resultados:
                         print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
                         print("Você está na pagina: ",Qtd_paginas," De", Qtd_paginas)
@@ -422,9 +508,6 @@ def listarImoveis():
                     dadosDaPagina = (pagina*5)-5
                     cursor.execute("SELECT * FROM TBL_imovel LIMIT 5 OFFSET %s;", (dadosDaPagina,))
                     resultados = cursor.fetchall()
-                    db.commit()
-                    cursor.close()
-                    db.close()
                     for resultado in resultados:
                         print(f"\n>>>ID: {resultado[0]} |\n>>>{resultado[1]} |\n>>>Estado: {resultado[2]} |\n>>>Cidade: {resultado[3]} |\n>>>Bairro: {resultado[4]} |\n>>>Rua: {resultado[5]} |\n>>>Numero: {resultado[6]} |\n>>>Cep: {resultado[7]} |\n>>>Diaria: {resultado[8]} |\n>>>Comodos: {resultado[9]}")
                         print("Você está na pagina: ",pagina," De", Qtd_paginas)
@@ -440,21 +523,59 @@ def listarImoveis():
 #                             ✍ cadastro de Cliente ✍                              # 
 #=====================================================================================#
 def cadastroClinte():
-    nome = str(input('Digite seu Nome Completo:\n>>> '))
-    email = str(input('Digite seu Email:\n>>> '))
-    telefone = str(input('Digite seu Telefone:\n>>> '))
-    senha = str(input('Crie sua Senha Numerica:\n>>>'))
-    cpf = str(input('Digite seu CPF:\n>>> '))
+    cadastroCliente = True
+    while cadastroCliente:
+        print("Para cancelar❌\nDeixe o campo vazio e aperte 'ENTER'")
+        nome = str(input('Digite seu Nome Completo:\n>>> '))
+        if nome == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+        
+        email = str(input('Digite seu Email:\n>>> '))
+        if email == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+        telefone = str(input('Digite seu Telefone:\n>>> '))
+        if telefone == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
 
-    cursor.execute(
-        "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,senha_cliente,cpf_cliente) " 
-        "VALUES (%s,%s,%s,%s,%s);",(nome,email,telefone,senha,cpf))
-    cursor.fetchone()
-    db.commit()
-    cursor.close()
-    db.close()
-    print('Dados Salvos! ✅')
-    time.sleep(1.5)
+        # VALIDAR????????????
+        cpf = str(input('Digite seu CPF:\n>>> '))
+        if cpf == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            cadastroCliente = False
+            main()
+            break
+
+        print("===Pronto para registro===\n")
+        print(">>>NOME| {}\n>>>EMAIL| {}\n>>>TELEFONE| {}\n>>>CPF| {}\n".format(nome, email, telefone,cpf))
+        print("Os dados estão corretos?\n|S| Sim\n|N| Não")
+        resposta = input("\n>>>")
+        #####################
+        if resposta.lower() == "s":
+            cursor.execute(
+                "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,cpf_cliente) " 
+                "VALUES (%s,%s,%s,%s);",(nome,email,telefone,cpf))
+            cursor.fetchone()
+            db.commit()
+            print('Dados Salvos! ✅')
+            main()
+        else:
+            cadastroCliente = False
+            print("Saindo...\n")
+            time.sleep(1.5)
+            break
     main()
 #=====================================================================================#
 #                   🏡➕🏃‍♂️💨 Atribuir Cliente ao Imovel 🏡➕🏃‍♂️💨                   # 
@@ -464,9 +585,9 @@ def atribuirCliente():
     idCliente = str(input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>>'))
     idImovel = str(input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>>'))
     cursor.execute(
-     "UPDATE TBL_imovel " \
-     "SET fk_TBL_imovel_id_cliente = %s " \
-     "WHERE id_imovel = %s "),(idCliente,idImovel)
+     "UPDATE TBL_imovel SET fk_TBL_imovel_id_cliente = %s WHERE id_imovel = %s;",(idCliente,idImovel))
+    cursor.fetchone()
+    db.commit()
 #=====================================================================================#
 #                                👨‍💻 Adicionar ADM 👨‍💻                                 # 
 #=====================================================================================#
@@ -480,9 +601,7 @@ def cadastroADM():
         "INSERT INTO TBL_adm (nome_adm,email_adm,senha_adm) " 
         "VALUES (%s,%s,%s);",(nome,email,senha))
     cursor.fetchone()
-    cursor.close()
     db.commit()
-    db.close()
     print('Dados Salvos! ✅')
     time.sleep(1.5)
     main()
@@ -506,7 +625,7 @@ def listarCliente():
     data = cursor.fetchall()
     db.commit()
     for resultado in data:
-        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>Senha: {resultado[4]} |\n>>>CPF: {resultado[5]}")
+        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>CPF: {resultado[4]}")
         # table = Table(show_header=True, header_style="bold magenta")
         # table.add_column("ID", style="dim", width=12)
         # table.add_row(str(resultado[0]))
@@ -530,7 +649,6 @@ def listarCliente():
                     print("Você digitou: {}...👀".format(pagina))
                     pagina = int(1)
                     time.sleep(1.2)
-        
             if type(pagina) == int:
                 ## CODIGO PARA VER MAIS PAGINAS
                 print("Buscando dados...⏳⚒")
@@ -541,7 +659,7 @@ def listarCliente():
                     resultados = cursor.fetchall()
                     db.commit()
                     for resultado in resultados:
-                        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>Senha: {resultado[4]} |\n>>>CPF : {resultado[5]} ")
+                        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>CPF : {resultado[4]} ")
                     print("Você está na pagina: ",Qtd_paginas," De", Qtd_paginas)
                     print("Numero da pagina maior que o limite de: {}😅\nExibindo Ultima Página\n".format(Qtd_paginas))
                 else:
@@ -550,7 +668,7 @@ def listarCliente():
                     resultados = cursor.fetchall()
                     db.commit()
                     for resultado in resultados:
-                        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>Senha: {resultado[4]} |\n>>>CPF: {resultado[5]}")
+                        print(f"\n>>>ID: {resultado[0]} |\n>>>Nome: {resultado[1]} |\n>>>Email: {resultado[2]} |\n>>>Telefone: {resultado[3]} |\n>>>CPF: {resultado[4]}")
                     print("Você está na pagina: ",pagina," De", Qtd_paginas)
 
                 listandoCliente()
@@ -568,9 +686,9 @@ def atualizarCliente():
             if comando.lower() == str("d"):
                 print("Indo para Listagem de Clientes🙅...")
                 time.sleep(1.2)
-                listarImoveis()
+                listarCliente()
             elif comando.lower() == "s":
-                print("Saindo...🏃‍♂️💨")
+                print("Saindo...🏃💨")
                 time.sleep(1.2)
                 main()
             else:
@@ -579,7 +697,7 @@ def atualizarCliente():
                     cursor.execute("SELECT * FROM TBL_cliente WHERE id_cliente = %s", (idAtt,))
                     resultados = cursor.fetchone()
                     db.commit()
-                    print("===Você está editando🔧✍===\n|ID:ㅤ{}\n|NOME:ㅤ{}\n|EMAIL:ㅤ{}\n|TELEFONE:ㅤ{}\n|SENHA:ㅤ{}\n|CPF:ㅤ{}\n".format(resultados[0],resultados[1],resultados[2], resultados[3], resultados[4], resultados[5]))
+                    print("===Você está editando🔧✍===\n|ID:ㅤ{}\n|NOME:ㅤ{}\n|EMAIL:ㅤ{}\n|TELEFONE:ㅤ{}\n|CPF:ㅤ{}\n".format(resultados[0],resultados[1],resultados[2], resultados[3], resultados[4]))
                     if resultados == None:
                         print('Nenhum Resultado Para esse ID🙄❌❗\n')
                         time.sleep(2)
@@ -592,7 +710,7 @@ def atualizarCliente():
                                 alt_nome = str(input('\n>>>'))
                             elif a.lower() == 'n':
                                 alt_nome = None  # Mantém como None para não atualizar
-                                print('OK\n ')
+                                print('OK\n')
                             else:
                                 print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
                                 time.sleep(3)
@@ -625,24 +743,11 @@ def atualizarCliente():
                                 print("Retornando ao inicio...🔄")
                                 time.sleep(1.2)
                                 atualizarCliente()
-                            #SENHA
-                            d = input('Alterar Senha?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[4]))
-                            if d.lower() == 's':
-                                alt_senha = str(input('\n>>>'))
-                            elif d.lower() == 'n':
-                                alt_senha = None  # Mantém como None para não atualizar
-                                print('OK\n ')
-                            else:
-                                print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>>")
-                                time.sleep(3)
-                                print("Retornando ao inicio...🔄")
-                                time.sleep(1.2)
-                                atualizarCliente()
                             #CPF
-                            e = input('Alterar CPF?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[5]))
-                            if e.lower() == 's':
+                            d = input('Alterar CPF?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>>'.format(resultados[4]))
+                            if d.lower() == 's':
                                 alt_cpf = str(input('\n>>>'))
-                            elif e.lower() == 'n':
+                            elif d.lower() == 'n':
                                 alt_cpf = None  # Mantém como None para não atualizar
                                 print('OK\n ')
                             else:
@@ -664,9 +769,6 @@ def atualizarCliente():
                             if alt_telefone is not None:
                                 updates.append("telefone_cliente = %s")
                                 params.append(alt_telefone)
-                            if alt_senha is not None:
-                                updates.append("senha_cliente = %s")
-                                params.append(alt_senha)
                             if alt_cpf is not None:
                                 updates.append("cpf_cliente = %s")
                                 params.append(alt_cpf)
@@ -678,8 +780,6 @@ def atualizarCliente():
                                 cursor.execute(query, params)
                                 db.commit()
                                 print("Alterando dados...⏳")
-                                cursor.close()
-                                db.close()
                                 time.sleep(2)
                                 print('Dados Alterados!🔧✅')
                                 time.sleep(3)
