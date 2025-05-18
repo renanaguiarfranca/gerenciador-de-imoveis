@@ -796,7 +796,7 @@ def atualizarCliente():
         except ValueError:
             listarCliente()
 #=====================================================================================#
-#                        🔧✍🕴 Listar e Editar cliente 🔧✍🕴                       # 
+#                                ⚙ Validador de CPF ⚙                                # 
 #=====================================================================================#
 def validadorDeCPF():
     print('Validador de CPF')
@@ -851,5 +851,9 @@ def validadorDeCPF():
     resultadoN10 = n10 #numero que representa o resultado a ser alcançado, ou seja, o resultado do validador tem que ser esse
 
     #conta a ser feita, todos os numeros depois da multiplicação, o resultado deles somados em seguida multiplicados por 10 e depois pegando o resto da divisão inteira por 11.
-    print('obs: se caso o resultado tiver sido 10, ele vale por 0')
-    print('o resultado a ser alcançado é de {} e o resultado obtido foi de {}'.format(n10,r))
+    if r == 10:
+        r = 0
+    if n10 == r:
+        print("seu CPF está correto")
+    else:
+        print('CPF INVALIDO!!!')
