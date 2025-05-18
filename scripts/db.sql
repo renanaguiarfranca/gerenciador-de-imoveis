@@ -10,7 +10,6 @@ CREATE TABLE TBL_cliente (
     nome_cliente VARCHAR(50),
     email_cliente VARCHAR(50),
     telefone_cliente VARCHAR(50),
-    senha_cliente VARCHAR(255),
     cpf_cliente VARCHAR(15),
     fk_tbl_pagamentos_id_pagamento INT
 );
@@ -19,7 +18,6 @@ CREATE TABLE TBL_Pagamentos (
     id_pagamento INT PRIMARY KEY AUTO_INCREMENT,
     valor_pagamento DECIMAL(10,2),
     data_pagamento DATE,
-    vencimento_pagamento DATE,
     status_pagamento BOOLEAN,
     formato_pagamento VARCHAR(20),
     fk_TBL_cliente_id_cliente INT
@@ -38,12 +36,12 @@ CREATE TABLE TBL_imovel (
     comodos_imovel INT,
     fk_TBL_imovel_id_cliente INT
 );
+
 CREATE TABLE TBL_adm (
     id_adm INT PRIMARY KEY AUTO_INCREMENT,
     nome_adm VARCHAR(50),
     email_adm VARCHAR(50),
-    senha_adm VARCHAR(255),
-    super_adm bool
+    senha_adm VARCHAR(255)
 );
  
  ALTER TABLE TBL_Pagamentos ADD CONSTRAINT FK_TBL_Pagamentos
@@ -55,3 +53,10 @@ CREATE TABLE TBL_adm (
     FOREIGN KEY (fk_TBL_imovel_id_cliente)
     REFERENCES TBL_cliente (id_cliente)
     ON DELETE SET NULL;
+
+ SELECT tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_imovel.descricao_imovel, tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento 
+ FROM tbl_imovel,tbl_pagamentos INNER JOIN tbl_cliente ON 
+ fk_TBL_cliente_id_cliente = tbl_cliente.id_cliente = tbl_pagamentos.fk_TBL_cliente_id_cliente;
+
+ SELECT tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel
+ FROM tbl_imovel INNER JOIN tbl_cliente ON fk_TBL_imovel_id_cliente = id_cliente;
