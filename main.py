@@ -12,10 +12,10 @@ telaInicio()
 #Cadastrar Imovel ✅
 #Listar Cliente ✅
 #Cadastrar Cliente ✅ 
-#Listar Pagamentos
-#Registrar Pagamento
-
 #Remover Imovel ✅
-#Remover Cliente 
+#Registrar Pagamento
+#Listar Pagamentos
 #Remover Pagamento 
+
+#Remover Cliente 
 #Remover ADM
