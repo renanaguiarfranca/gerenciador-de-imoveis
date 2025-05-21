@@ -1,9 +1,8 @@
 from back_end import *
 telaInicio()
-# Criar IF para validar os inputs de CEP (Somente numeros) | Cadastrar Imovel
 # Criar IF para validar os inputs CPF (Validar CPF e input (Somente INT)) | Cadastrar Cliente ✅
-#criar IF para validar inputs comodos (Somente INT) | Cadastrar Imovel
-#criar status pagamento 
+# Criar IF para validar inputs comodos (Somente INT) | Cadastrar Imovel ✅
+
 
 #TESTES:
 #Cadastrar Adm ✅
@@ -13,9 +12,9 @@ telaInicio()
 #Listar Cliente ✅
 #Cadastrar Cliente ✅ 
 #Remover Imovel ✅
-#Registrar Pagamento
-#Listar Pagamentos
-#Remover Pagamento 
-
-#Remover Cliente 
 #Remover ADM
+#Remover Cliente
+#Listar Pagamentos
+#Remover Pagamento
+#Registrar Pagamento
+#Listar Imoveis Ocupados | INNERJOIN fk_tbl_imovel_id_cliente NOT LIKE = Null

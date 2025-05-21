@@ -1,9 +1,9 @@
 #======================================================================================#
-#                                   📃 Imports 📃                                     # 
+#                                  📃 Imports 📃                                      # 
 #======================================================================================#
+import time
 from conection import *
 from pyfiglet import figlet_format
-import time
 from rich.console import Console
 from rich.table import Table
 #======================================================================================#
@@ -17,7 +17,8 @@ header = str("""
 ███████║██║░░██║██╔████╔██║█████╗░░█████╗░░░╚████╔╝░
 ██╔══██║██║░░██║██║╚██╔╝██║██╔══╝░░██╔══╝░░░░╚██╔╝░░
 ██║░░██║╚█████╔╝██║░╚═╝░██║███████╗██║░░░░░░░░██║░░░
-╚═╝░░╚═╝░╚════╝░╚═╝░░░░░╚═╝╚══════╝╚═╝░░░░░░░░╚═╝░░░""")
+╚═╝░░╚═╝░╚════╝░╚═╝░░░░░╚═╝╚══════╝╚═╝░░░░░░░░╚═╝░░░
+|============|Seu Gerenciador de Imoveis|==========|""")
 #======================================================================================#
 #                                 📃 Tela Index 📃                                    # 
 #======================================================================================#
@@ -142,13 +143,12 @@ def cadastroImovel():
             time.sleep(1)
             break
 
-        #NECESSARIO VALIDAR??
-        cep = str(input('Digite o Cep:\n>>> '))
+        #CEP
+        cep = str(input('Digite o Cep:\n>>> ').strip())
         if cep == "":
             print("Saindo...\n")
             time.sleep(1)
             break
-
         #VERIFICAR SE DIÁRIA É NUMERO E/OU FLOAT
         diaria = input('Digite o Valor da Diaria:\n>>> ')
         if diaria == "":
@@ -169,7 +169,7 @@ def cadastroImovel():
             except ValueError:
                     # VAMOS FICAR AQUI ATÉ ELA RESOLVER DIGITAR CORRETAMENTE:
                     while type(diaria) != float:
-                        diaria = input('Digite o Valor da Diaria de forma correta.\nEX: 199.99\n>>> ')
+                        diaria = input('Digite o Valor da Diaria de forma correta.\nEX: 19.99\n>>> ')
                         #VERIFICA SE DIGITOU CERTO
                         try:
                             floatDiaria = float(diaria)
@@ -181,12 +181,37 @@ def cadastroImovel():
                             print("Vamos tentar novamente🔄️\n>>> ")
                             time.sleep(1)
 
-        comodos = int(input('Digite Quantos comodos:\n>>> '))
+        comodos = input('Digite Quantos comodos:\n>>> ')
         if comodos == "":
             print("Saindo...\n")
             time.sleep(1)
             break
-        print('deseja a cadastrar o seguinte imovel?\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}\n>>> {}'.format(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
+        else:
+            try:
+                #VERIFICA SE ESCREVEU CERTO
+                intComodos = int(comodos)
+                if type(intComodos) == int:
+                    comodos = intComodos
+                #SE ESCREVEU ERRADO MANDA MENSAGEM E VAI PARA O EXCEPT:
+                else:
+                    print("Comodos apenas numeros inteiros...\n")
+                    print("Você digitou:",comodos)
+                    time.sleep(2)
+            except ValueError:
+                    # VAMOS FICAR AQUI ATÉ ELA RESOLVER DIGITAR CORRETAMENTE:
+                    while type(comodos) != int:
+                        comodos = input('Digite a qtd de comodos de forma correta.\nEX: 5\n>>> ')
+                        #VERIFICA SE DIGITOU CERTO
+                        try:
+                            intComodos = int(comodos)
+                            if type(intComodos) == int:
+                                comodos = intComodos
+                                continue
+                        #SE NÃO DIGITOU DA ERRO E VOLTA E DA O EXEMPLO
+                        except ValueError:
+                            print("Vamos tentar novamente🔄️\n")
+                            time.sleep(1)
+        print('Deseja cadastrar o seguinte imovel?\n>>> Descrição: {}\n>>> Estado: {}\n>>> Cidade: {}\n>>> Bairro: {}\n>>> Rua: {}\n>>> Numero: {}\n>>> Cep: {}\n>>> Diária: {}\n>>> Comodos: {}'.format(descricao,estado,cidade,bairro,rua,numero,cep,diaria,comodos))
         comando = input('|S| Sim \n|N| Não\n')
         if comando.lower() == 's':
             cursor.execute(
@@ -346,9 +371,14 @@ def atualizarImovel():
                         f = input('Alterar CEP?\n===|{}|===\n|S| Sim✅\n|N| Não❌\n>>> '.format(resultados[7]))
                         if f.lower() == 's':
                             alt_cep = str(input('\n>>> '))
+                            if alt_cep == "":
+                                print("Saindo...\n")
+                                alt_cep = None
+                                time.sleep(2)
+                                atualizarImovel()
                         elif f.lower() == 'n':
                             alt_cep = None  # Mantém como None para não atualizar
-                            print('OK\n ')
+                            print('OK\n')
                         else:
                             print("Comando Invalido🙄\nDigite\n|S| Para sim✅\n|N| Para não❌\n>>> ")
                             time.sleep(3)
@@ -612,7 +642,7 @@ def cadastroClinte():
             break
     main()
 #======================================================================================#
-#                   🏡➕🏃‍♂️💨 Atribuir Cliente ao Imovel 🏡➕🏃‍♂️💨                    # 
+#                     🏡➕🏃‍♂️💨 Atribuir Cliente ao Imovel 🏡➕🏃‍♂️💨                  # 
 #======================================================================================#
 def atribuirCliente():
     print('Tela para Atribuir Cliente ao Imovel🏡🏃💨\n')
@@ -856,7 +886,8 @@ def atualizarCliente():
                                 main()
 
                         except ValueError:
-                            print("Comando invalido")
+                            print("Comando invalido❌")
+                            time.sleep(2.5)
                             atualizarCliente()
 
         except ValueError:
