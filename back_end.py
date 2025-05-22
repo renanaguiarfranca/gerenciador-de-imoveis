@@ -238,7 +238,7 @@ def cadastroImovel():
 def main():
     print(header)
     print("Bem vindo(a) ao ARBINHO 🏡")
-    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨‍💻\n")
+    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨\n|9| Remover ADM❌👨\n")
     print("|0| SAIR❌")
     comando = str(input("Digite o comando:\n"))
 
@@ -265,8 +265,11 @@ def main():
         time.sleep(1.5)
         atribuirCliente()
     elif(comando == str(8)):
-        print("Adicionar ADM👨‍💻")
+        print("Adicionar ADMc")
         cadastroADM()
+    elif(comando == str(9)):
+        print("Remover ADM")
+        removerADM()
     elif(comando == str(0)):
         print("SAINDO...🏃💨")
         telaInicio()
@@ -676,7 +679,48 @@ def cadastroADM():
     time.sleep(1.5)
     main()
 #======================================================================================#
-#                        🔧✍🕴 Listar e Editar cliente 🔧✍🕴                        # 
+#                                👨‍💻 Remover ADM 👨‍💻                                    # 
+#======================================================================================#
+def removerADM():
+    id_remover = input('Digite o ID do ADM que deseja remover | Para sair digite: S\n>>>')
+    if id_remover.lower() == "s":
+        print("Saindo...\n")
+        time.sleep(1)
+        main()
+    else:
+        try:
+            id_adm = int(id_remover)
+            if type(id_adm) == int:  # Verifica se realmente é inteiro
+                id_remover = id_adm
+                # Remover adm com o input
+                cursor.execute("SELECT * FROM TBL_adm WHERE id_adm = %s;", (id_adm,))
+                resultados = cursor.fetchone()
+            if resultados == None:
+                print('Nenhum Resultado Para ', id_remover,'\n')
+                removerADM()
+
+        except ValueError:  # Se não conseguir converter para int
+            print("ERRO!\nDigite apenas números inteiros para o ID.")
+            removerADM()
+
+        if resultados:
+            print("\nDados do ADM encontrado:")
+            print(f"ID: {resultados[0]}")
+            print(f"Nome: {resultados[1]}")
+            print(f"Email: {resultados[2]}")
+            print(f"Senha: {resultados[3]}")
+        confirmacaoADM = input('Deseja remover este adm ?\n=====================\n|S| = Sim\n|N| = Não):\n')
+        if confirmacaoADM.lower() == 's':
+            cursor.execute("DELETE FROM tbl_adm WHERE id_adm = %s;", (id_adm,))
+            db.commit()
+            print("\nADM removido com sucesso!")
+            removerADM()
+        else:
+            print("Ação cancelada!")
+            removerADM()
+    removerADM()
+#======================================================================================#
+#                        🔧✍🕴 Listar e Editar cliente 🔧✍🕴                      # 
 #======================================================================================#
 def listarCliente():
     print('Lista de Clientes: \n')
@@ -889,6 +933,5 @@ def atualizarCliente():
                             print("Comando invalido❌")
                             time.sleep(2.5)
                             atualizarCliente()
-
         except ValueError:
             listarCliente()

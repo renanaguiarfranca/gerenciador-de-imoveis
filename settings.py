@@ -1,7 +1,7 @@
 HOST = 'localhost'
 USER = 'root'
-PASSWORD = ''
-DB_NAME = ''
+PASSWORD = 'admin'
+DB_NAME = 'bd_projeto'
 
 LOGIN = "0"
 SENHA = "0"
