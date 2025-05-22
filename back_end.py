@@ -238,7 +238,7 @@ def cadastroImovel():
 def main():
     print(header)
     print("Bem vindo(a) ao ARBINHO 🏡")
-    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨\n|9| Remover ADM❌👨\n")
+    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨\n|9| Remover ADM❌👨\n|10| Pagamentos💵")
     print("|0| SAIR❌")
     comando = str(input("Digite o comando:\n"))
 
@@ -270,6 +270,10 @@ def main():
     elif(comando == str(9)):
         print("Remover ADM")
         removerADM()
+    elif(comando == str(10)):
+        print("Pagamentos...")
+        time.sleep(1)
+        pagamentos()
     elif(comando == str(0)):
         print("SAINDO...🏃💨")
         telaInicio()
@@ -747,7 +751,7 @@ def listarCliente():
     print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
 
     def listandoCliente():
-        comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar um cliente🏡\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>> ")
+        comando = input("🔧Comandos Disponíveis🔧:\n|A| Para atualizar um cliente🏡\n|R| Remover Cliente❌💣\n|S| Para sair🏃💨\nDigite o número da pagina📃\n>>> ")
         #EXECUTA O CODIGO DE ACORDO COM O INPUT
         try:
             if comando.lower() == "s":
@@ -756,7 +760,11 @@ def listarCliente():
             elif comando.lower() == "a":
                 print("Atualizar Cliente...\n")
                 time.sleep(1.5)
-                atualizarCliente() 
+                atualizarCliente()
+            elif comando.lower() == "r":
+                print("Remover Cliente...\n")
+                time.sleep(1.5)
+                removerCliente() 
             else:
                 pagina = int(comando)
                 if pagina == 0:
@@ -935,3 +943,67 @@ def atualizarCliente():
                             atualizarCliente()
         except ValueError:
             listarCliente()
+
+def pagamentos():
+    print("=========💵Pagamentos💵=========")
+    print("Comandos Disponíveis:\n|A| Adicionar um pagamento💵✅\n|L| Listar pagamentos📃\n|R| Remover registro de pagamento❌💣\n")
+    print("|S| Sair⬅️\n")
+    comando = input(">>>")
+
+    if comando.lower == str("s"):
+        print("Saindo...⬅️")
+        time.sleep(1)
+        main()
+    elif comando.lower == str("a"):
+        print("Adicionar Pagamento✅")
+        time.sleep(1)
+        #Ir para função()
+    elif comando.lower == str("l"):
+        print("Listar pagamentos📃")
+        time.sleep(1)
+        #Ir para função()
+    elif comando.lower == str("r"):
+        print("Remover registro de pagamento💣💵")
+        time.sleep(1)
+        #Ir para função()
+
+def removerCliente():
+    id_input2 = input('Digite o ID do cliente que deseja remover\nPara sair digite: S\n>>>:')
+    try:
+        if id_input2.lower() == 's':
+            print('Saindo...')
+            time.sleep(1)
+            main()
+        else:
+            id_cliente = int(id_input2)
+        if type(id_cliente) == int:
+            id_cliente = id_input2
+            cursor.execute('SELECT * FROM tbl_cliente WHERE id_cliente = %s;', (id_cliente,))
+            resultados = cursor.fetchone()
+            db.commit()
+        if resultados == None:
+            print('Nenhum Resultado Para ', id_input2,'\n')
+    except ValueError:
+        print("ERRO!\nDigite apenas números inteiros para o ID.")
+        time.sleep(1)
+        removerCliente()
+
+    if resultados:
+        print("\nDados do cliente encontrado:")
+        print(f"ID: {resultados[0]}")
+        print(f"Nome: {resultados[1]}")
+        print(f"Email: {resultados[2]}")
+        print(f"Telefone: {resultados[3]}")
+        print(f"Senha: {resultados[4]}")
+        print(f"CPF: {resultados[5]}")
+        confirmacaoCliente = input('Deseja remover este cliente ?\n|S|= Sim\n|N|= Não)\n>>>')
+        if confirmacaoCliente.lower() == 's':
+            cursor.execute("DELETE FROM tbl_cliente WHERE id_cliente = %s;", (id_cliente,))
+            db.commit()
+            time.sleep(1)
+            print("\nCliente removido com sucesso!")
+            removerCliente()
+        else:
+            print("Ação cancelada!")
+            time.sleep(1)
+            removerCliente()
