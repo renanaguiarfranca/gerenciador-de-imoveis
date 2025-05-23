@@ -2,6 +2,7 @@
 #                                  📃 Imports 📃                                      # 
 #======================================================================================#
 import time
+from datetime import datetime
 from conection import *
 from pyfiglet import figlet_format
 from rich.console import Console
@@ -944,29 +945,6 @@ def atualizarCliente():
         except ValueError:
             listarCliente()
 
-def pagamentos():
-    print("=========💵Pagamentos💵=========")
-    print("Comandos Disponíveis:\n|A| Adicionar um pagamento💵✅\n|L| Listar pagamentos📃\n|R| Remover registro de pagamento❌💣\n")
-    print("|S| Sair⬅️\n")
-    comando = input(">>>")
-
-    if comando.lower == str("s"):
-        print("Saindo...⬅️")
-        time.sleep(1)
-        main()
-    elif comando.lower == str("a"):
-        print("Adicionar Pagamento✅")
-        time.sleep(1)
-        #Ir para função()
-    elif comando.lower == str("l"):
-        print("Listar pagamentos📃")
-        time.sleep(1)
-        #Ir para função()
-    elif comando.lower == str("r"):
-        print("Remover registro de pagamento💣💵")
-        time.sleep(1)
-        #Ir para função()
-
 def removerCliente():
     id_input2 = input('Digite o ID do cliente que deseja remover\nPara sair digite: S\n>>>:')
     try:
@@ -1007,3 +985,145 @@ def removerCliente():
             print("Ação cancelada!")
             time.sleep(1)
             removerCliente()
+
+
+def adicionarPagamentos():
+    print("\nAdicionando pagamento...✅\n")
+    time.sleep(1)
+    print("Caso queira sair\nDeixe o campo vazio e pressione 'Enter'")
+
+    adicionandoPagamento = True
+    while adicionandoPagamento:
+        valorPagamento = input('Digite o Valor do pagamento EX: 299.00:\n>>>')
+        if valorPagamento == "":
+                print("Saindo...\n")
+                time.sleep(1)
+                # adicionandoPagamento = False
+                pagamentos()
+        try:
+            float_valorPagamento = float(valorPagamento)
+            if type(float_valorPagamento) == float:
+                valorPagamento = float_valorPagamento
+                print("✅\n")
+                time.sleep(1)
+                break
+            elif valorPagamento == "":
+                print("Saindo...\n")
+                time.sleep(1)
+                pagamentos()
+            else:
+                print("Valor digitado incorretamente...\n")
+                print("Você digitou:",valorPagamento)
+                time.sleep(2)
+        except ValueError:
+            print("Voce digitou errado: {}".format(valorPagamento))
+            valorPagamento = input('Digite o Valor do pagamento:\n>>>')
+    adicionandoPagamento = False
+
+    dataPagamento = True
+    while dataPagamento:
+        inputDate = str(input("Digite a data de pagamento (formato: dd/mm/aaaa): "))
+        if dataPagamento == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            pagamentos()
+        try:
+            inputDate = datetime.strptime(inputDate, "%d/%m/%Y")
+            break
+        except ValueError:
+            print("Data inválida. Tente novamente no formato: dd/mm/aaaa.")
+    # Lê a data do usuário
+    dbData = inputDate
+    # Converte para o formato de banco de dados (aaaa-mm-dd)
+    databaseDate = dbData.strftime("%Y-%m-%d")
+    print("Data pagamento: {}✅".format(databaseDate))
+    dataPagamento = False
+    time.sleep(1)
+    statusPagamento = True
+    while statusPagamento:
+        statusPagamento = input("Status do pagamento:\n|0| = Pendente🕧\n|1| = Pago✅\n>>>")
+        if statusPagamento.lower() == "":
+            print("Saindo...\n")
+            time.sleep(1)
+            pagamentos()
+        else:
+            if statusPagamento == "1":
+                print("Status de definido como: PAGO✅\n")
+                statusPagamento = False
+                break
+            elif statusPagamento == "0":
+                print("Status definido como: Pendente🕧\n")
+                statusPagamento = False
+                break
+            else:
+                print("ERRO")
+                continue
+    formatoPagamento = True
+    while formatoPagamento:
+        forma_pagamento = input("Descreva a forma de pagamento\nEx: Pix, Cartão de Credito, Débito, Dinheiro\n>>>")
+        if forma_pagamento.lower() == "":
+            print("Saindo...")
+            time.sleep(1)
+            formatoPagamento = False
+            break
+        else:
+            print("Forma de pagamento definido como: {}\n".format(forma_pagamento))
+            formatoPagamento = False
+            time.sleep(1)
+            break
+        break
+
+    pagamentoCliente = True
+    while pagamentoCliente:
+        print("Caso queira sair, deixe o campo vazio e pressione 'Enter'\n")
+        id_cliente_pagamento = input("ID do cliente que pagou\nCaso não souber, volte e verifique.\n>>>")
+        if id_cliente_pagamento == "":
+            print("Saindo...")
+            time.sleep(1)
+            pagamentos()
+        try:
+            int_id_cliente = int(id_cliente_pagamento)
+            if type(int_id_cliente) == int:
+                id_cliente_pagamento = int_id_cliente
+                print("Id do cliente: {}".format(int_id_cliente))
+                pagamentoCliente = False
+                break
+            #####################################
+            # Verificar no banco se existe esse ID e inserir, se não, volta tudo!
+            cursor.execute("SELECT * FROM tbl_cliente WHERE id_cliente = %s;",(id_cliente_pagamento,))
+            result = cursor.fetchone()
+            if result == None:
+                print("ID cliente não encontrado")
+                break
+            else:
+                print("Info do cliente:\nID: {}\n| Nome: {}".format(result[0],result[1]))
+                time.sleep(1)
+        except ValueError:
+            print("ID inválido")     
+        
+            
+        
+    pagamentos()
+
+def pagamentos():
+    print("=========💵Pagamentos💵=========")
+    print("Comandos Disponíveis:\n|A| Adicionar um pagamento💵✅\n|L| Listar pagamentos📃\n|R| Remover registro de pagamento❌💣\n")
+    print("|S| Sair⬅️\n")
+    comando = str(input(">>>"))
+
+    if comando.lower() == str("s"):
+        print("Saindo...⬅️")
+        time.sleep(1)
+        main()
+    elif comando.lower() == str("a"):
+        print("Adicionar Pagamento✅")
+        time.sleep(1)
+        adicionarPagamentos()
+    elif comando.lower() == str("l"):
+        print("Listar pagamentos📃")
+        time.sleep(1)
+        #Ir para função()
+    elif comando.lower() == str("r"):
+        print("Remover registro de pagamento💣💵")
+        time.sleep(1)
+        #Ir para função()
