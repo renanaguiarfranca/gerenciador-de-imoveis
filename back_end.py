@@ -2,16 +2,12 @@
 #                                  📃 Imports 📃                                      # 
 #======================================================================================#
 import time
+import math
 from datetime import datetime
 from conection import *
-from pyfiglet import figlet_format
-from rich.console import Console
-from rich.table import Table
 #======================================================================================#
 #                             📃 Variaveis Globais 📃                                 # 
 #======================================================================================#
-# header = (figlet_format('ARBINHO', font = "standard")) #NOME ARBINHO
-# cadastrandoImovel = False
 header = str("""
 ██╗░░██╗░█████╗░███╗░░░███╗███████╗███████╗██╗░░░██╗
 ██║░░██║██╔══██╗████╗░████║██╔════╝██╔════╝╚██╗░██╔╝
@@ -45,16 +41,20 @@ def autenticarLogin():
         time.sleep(2)
         telaInicio()
     else:
-        admNome = login[0]
-        admLogin = login[1]
-        admSenha = login[2]
-    if usuario == admLogin and senha == admSenha:
-        print(('Seja Bem Vindo {} Ao...').format(admNome))
-        time.sleep(2)
-        main()
-    else:
-        print("Erro!\nUsuario ou senha incorretos!")
-        telaInicio()
+        try:
+            admNome = login[0]
+            admLogin = login[1]
+            admSenha = login[2]
+            if usuario == admLogin and senha == admSenha:
+                print(('Seja Bem Vindo {} Ao...').format(admNome))
+                time.sleep(2)
+                main()
+            else:
+                print("Erro!\nUsuario ou senha incorretos!")
+                telaInicio()
+        except ValueError:
+            print("Erro com login\n")
+            telaInicio()
 #======================================================================================#
 #                        🏡👈❌ Remoção de Imoveis 🏡👈❌                           #
 #======================================================================================#
@@ -201,7 +201,7 @@ def cadastroImovel():
             except ValueError:
                     # VAMOS FICAR AQUI ATÉ ELA RESOLVER DIGITAR CORRETAMENTE:
                     while type(comodos) != int:
-                        comodos = input('Digite a qtd de comodos de forma correta.\nEX: 5\n>>> ')
+                        comodos = input('Digite a quantidade de comodos de forma correta.\nEX: 5\n>>> ')
                         #VERIFICA SE DIGITOU CERTO
                         try:
                             intComodos = int(comodos)
@@ -239,7 +239,7 @@ def cadastroImovel():
 def main():
     print(header)
     print("Bem vindo(a) ao ARBINHO 🏡")
-    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨\n|9| Remover ADM❌👨\n|10| Pagamentos💵")
+    print("|1| Cadastrar Imovel✍ ✅\n|2| Listar Imoveis📑🔍\n|3| Atualizar Imovel🔧🔄\n|4| Remover Imovel💣❌\n|5| Cadastro Cliente📃✍\n|6| Listar Cliente e Editar🔧✍🕴\n|7| Atribuir Cliente ao Imovel...🏡🏃💨\n|8| Adicionar ADM...👨\n|9| Remover ADM❌👨\n|10| Pagamentos💵\n")
     print("|0| SAIR❌")
     comando = str(input("Digite o comando:\n"))
 
@@ -491,7 +491,6 @@ def atualizarImovel():
                     except ValueError:
                         print("Comando invalido")
                         atualizarImovel()
-
     except ValueError:
         atualizarImovel()
 #======================================================================================#
@@ -506,17 +505,13 @@ def listarImoveis():
     #O '//' na equação significa divisão sem resto; Numero de paginas será arredondando p baixo...e somarei + 1 se houver resto
     #Ex: 23 itens 23/5 = 4pg inteira + 1 pois há resto
     paginaAtual = 1
-    Qtd_paginas = (len(rows)//5)+1 #Quero dividir: 5 por pagina entao Total de linhas / 5
+    Qtd_paginas = math.ceil(len(rows)/5) #Quero dividir: 5 por pagina entao Total de linhas / 5
     #len = Comprimento (Quantidade de linhas/rows)
 
     cursor.execute("Select * from TBL_imovel LIMIT 5;")
     data = cursor.fetchall()
     for resultado in data:
         print(f"\n>>> ID: {resultado[0]} |\n>>> {resultado[1]} |\n>>> Estado: {resultado[2]} |\n>>> Cidade: {resultado[3]} |\n>>> Bairro: {resultado[4]} |\n>>> Rua: {resultado[5]} |\n>>> Numero: {resultado[6]} |\n>>> Cep: {resultado[7]} |\n>>> Diaria: {resultado[8]} |\n>>> Comodos: {resultado[9]}")
-        # table = Table(show_header=True, header_style="bold magenta")
-        # table.add_column("ID", style="dim", width=12)
-        # table.add_row(str(resultado[0]))
-        # print(table)
         print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
 
     def listandoImoveis():
@@ -634,7 +629,6 @@ def cadastroClinte():
         print(">>> NOME| {}\n>>> EMAIL| {}\n>>> TELEFONE| {}\n>>> CPF| {}\n".format(nome, email, telefone,cpf))
         print("Os dados estão corretos?\n|S| Sim\n|N| Não")
         resposta = input("\n>>> ")
-        #####################
         if resposta.lower() == "s":
             cursor.execute(
                 "INSERT INTO TBL_cliente (nome_cliente,email_cliente,telefone_cliente,cpf_cliente)" 
@@ -654,17 +648,28 @@ def cadastroClinte():
 #======================================================================================#
 def atribuirCliente():
     print('Tela para Atribuir Cliente ao Imovel🏡🏃💨\n')
-    idCliente = str(input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>> '))
-    idImovel = str(input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>> '))
-    cursor.execute(
-     "UPDATE TBL_imovel SET fk_TBL_imovel_id_cliente = %s WHERE id_imovel = %s;",(idCliente,idImovel))
-    cursor.fetchone()
-    cursor.execute("SELECT tbl_cliente.nome_cliente, tbl_imovel.descricao_imovel FROM tbl_imovel INNER JOIN tbl_cliente ON fk_TBL_imovel_id_cliente = id_cliente WHERE id_cliente = %s;",(idCliente,))
-    cliente = cursor.fetchall()
-    db.commit()
+    comando = input('Pressione |A| para Atribuir\n Digite |ENTER| para sair\n>>> ')
+    if comando == "":
+        print('Retornando ao Inicio...')
+        time.sleep(1.2)
+        main()
+    else:
+        print('>>>Caso queira sair, pressione o enter duas vezes<<<\n')
+        try:
+            idCliente = input('Digite o ID do cliente que deseja atribuir ao Imovel:\n>>> ')
+            idImovel = input('Digite o ID do Imovel que deseja atribuir ao cliente:\n>>> ')
+            cursor.execute(
+            "UPDATE TBL_imovel SET fk_TBL_imovel_id_cliente = %s WHERE id_imovel = %s;",(idCliente,idImovel))
+            cursor.fetchone()
+            cursor.execute("SELECT tbl_cliente.nome_cliente, tbl_imovel.descricao_imovel FROM tbl_imovel INNER JOIN tbl_cliente ON fk_TBL_imovel_id_cliente = id_cliente WHERE id_cliente = %s;",(idCliente,))
+            cliente = cursor.fetchall()
+            db.commit()
+        except ValueError:  # Se não conseguir converter para int
+            print("ERRO!\nDigite apenas números inteiros para o ID.")
+            main()
 
-    for data in cliente:
-        print("O cliente: {} Está na casa: {}".format(data[0], data[1]))
+        for data in cliente:
+            print("O cliente: {} Está na casa: {}".format(data[0], data[1]))
     main()
 #======================================================================================#
 #                                👨‍💻 Adicionar ADM 👨‍💻                                  # 
@@ -707,7 +712,6 @@ def removerADM():
         except ValueError:  # Se não conseguir converter para int
             print("ERRO!\nDigite apenas números inteiros para o ID.")
             removerADM()
-
         if resultados:
             print("\nDados do ADM encontrado:")
             print(f"ID: {resultados[0]}")
@@ -737,7 +741,7 @@ def listarCliente():
     #O '//' na equação significa divisão sem resto; Numero de paginas será arredondando p baixo...e somarei + 1 se houver resto
     #Ex: 23 itens 23/5 = 4pg inteira + 1 pois há resto
     paginaAtual = 1
-    Qtd_paginas = (len(rows)//5)+1 #Quero dividir: 5 por pagina entao Total de linhas / 5
+    Qtd_paginas = math.ceil(len(rows)/5) #Quero dividir: 5 por pagina entao Total de linhas / 5
     #len = Comprimento (Quantidade de linhas/rows)
 
     cursor.execute("Select * from TBL_cliente LIMIT 5;")
@@ -745,10 +749,6 @@ def listarCliente():
     db.commit()
     for resultado in data:
         print(f"\n>>> ID: {resultado[0]} |\n>>> Nome: {resultado[1]} |\n>>> Email: {resultado[2]} |\n>>> Telefone: {resultado[3]} |\n>>> CPF: {resultado[4]}")
-        # table = Table(show_header=True, header_style="bold magenta")
-        # table.add_column("ID", style="dim", width=12)
-        # table.add_row(str(resultado[0]))
-        # print(table)
     print("Pagina: |{}| de |{}|\n".format(paginaAtual,Qtd_paginas))
 
     def listandoCliente():
@@ -985,8 +985,6 @@ def removerCliente():
             print("Ação cancelada!")
             time.sleep(1)
             removerCliente()
-
-
 def adicionarPagamentos():
     print("\nAdicionando pagamento...✅\n")
     time.sleep(1)
@@ -1039,8 +1037,8 @@ def adicionarPagamentos():
     print("Data pagamento: {}✅".format(databaseDate))
     dataPagamento = False
     time.sleep(1)
-    statusPagamento = True
-    while statusPagamento:
+    statusPagamento_ = True #WHILE
+    while statusPagamento_:
         statusPagamento = input("Status do pagamento:\n|0| = Pendente🕧\n|1| = Pago✅\n>>>")
         if statusPagamento.lower() == "":
             print("Saindo...\n")
@@ -1049,18 +1047,20 @@ def adicionarPagamentos():
         else:
             if statusPagamento == "1":
                 print("Status de definido como: PAGO✅\n")
-                statusPagamento = False
+                statusPagamento = True      #INPUT
+                statusPagamento_ = False    #DESLIGAR O WHILE
                 break
             elif statusPagamento == "0":
                 print("Status definido como: Pendente🕧\n")
-                statusPagamento = False
+                statusPagamento = False     #INPUT
+                statusPagamento_ = False    #DESLIGAR O WHILE
                 break
             else:
                 print("ERRO")
                 continue
     formatoPagamento = True
     while formatoPagamento:
-        forma_pagamento = input("Descreva a forma de pagamento\nEx: Pix, Cartão de Credito, Débito, Dinheiro\n>>>")
+        forma_pagamento = input("Descreva a forma de pagamento:\nEx: Pix, Cartão de Credito, Débito, Dinheiro\n>>>")
         if forma_pagamento.lower() == "":
             print("Saindo...")
             time.sleep(1)
@@ -1075,8 +1075,8 @@ def adicionarPagamentos():
 
     pagamentoCliente = True
     while pagamentoCliente:
-        print("Caso queira sair, deixe o campo vazio e pressione 'Enter'\n")
-        id_cliente_pagamento = input("ID do cliente que pagou\nCaso não souber, volte e verifique.\n>>>")
+        print("Caso queira sair⬅️\nDeixe o campo vazio e pressione 'Enter'\n")
+        id_cliente_pagamento = input("ID do cliente que pagou\n>>>")
         if id_cliente_pagamento == "":
             print("Saindo...")
             time.sleep(1)
@@ -1086,24 +1086,285 @@ def adicionarPagamentos():
             if type(int_id_cliente) == int:
                 id_cliente_pagamento = int_id_cliente
                 print("Id do cliente: {}".format(int_id_cliente))
-                pagamentoCliente = False
-                break
-            #####################################
-            # Verificar no banco se existe esse ID e inserir, se não, volta tudo!
-            cursor.execute("SELECT * FROM tbl_cliente WHERE id_cliente = %s;",(id_cliente_pagamento,))
-            result = cursor.fetchone()
+                # Verificar no banco se existe esse ID e inserir, se não, volta tudo!
+                cursor.execute("SELECT * FROM tbl_cliente WHERE id_cliente = %s;",(id_cliente_pagamento,))
+                result = cursor.fetchone()
             if result == None:
-                print("ID cliente não encontrado")
-                break
+                print("ID cliente não encontrado❌")
+                time.sleep(1.5)
             else:
-                print("Info do cliente:\nID: {}\n| Nome: {}".format(result[0],result[1]))
+                print("===============================")
+                print("📃Info do Cliente📃\n|ID: {}\n|Nome: {}".format(result[0],result[1]))
+                print("===============================")
                 time.sleep(1)
         except ValueError:
-            print("ID inválido")     
-        
-            
-        
+            print("Comando inválido")
+        #SELECT tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento FROM Tbl_cliente INNER JOIN tbl_pagamentos ON fk_TBL_cliente_id_cliente = id_cliente where id_cliente = 1
+        cursor.execute("SELECT nome_cliente, cpf_cliente FROM TBL_cliente WHERE id_cliente = %s;",(id_cliente_pagamento,))
+        pagamentoCliente = False
+        resultado = cursor.fetchone()
+        print("Cliente: {}\nCPF: {}\nPagamento: R${}\nData do Pagamento: {}\nStatus Pagamento: {}\n|True = Pago✅ | False = Não Pago❌|\nForma de pagamento: {}\n".format(resultado[0],
+                                                                                                                                    resultado[1],
+                                                                                                                                    valorPagamento,
+                                                                                                                                    inputDate.strftime("%d/%m/%Y"),
+                                                                                                                                    statusPagamento,
+                                                                                                                                    forma_pagamento))
+    registeringPayment = True
+    while registeringPayment:
+        try:
+            confirmPayment = input("Deseja registrar o seguinte pagamento?\n|S| Sim\n|N| Não\n>>>")
+            if confirmPayment.lower() == "s":
+                print("Registrando...")
+                time.sleep(1)
+                cursor.execute(
+                "INSERT INTO tbl_pagamentos (valor_pagamento,data_pagamento,status_pagamento, formato_pagamento,fk_TBL_cliente_id_cliente) "
+                "VALUES (%s,%s,%s,%s,%s);",(valorPagamento,inputDate,statusPagamento,forma_pagamento,id_cliente_pagamento))
+                db.commit()
+                print("Registro concluido!✅")
+                
+                time.sleep(1)
+                registeringPayment = False
+                break
+            elif confirmPayment.lower() == "n":
+                print("ok")
+                registeringPayment = False
+                time.sleep(1)
+                break
+        except ValueError:
+            print("Comando inválido❌")
+            time.sleep(1)
     pagamentos()
+
+def removerPagamento(): 
+    id_INPUT = input('Digite o ID do pagamento que deseja remover | Para sair digite: S\n>>>:')
+    try:
+        if id_INPUT.lower() == 's':
+            main()
+        int_id_INPUT = int(id_INPUT)
+        if type(int_id_INPUT) == int:
+            id_INPUT = int_id_INPUT
+            cursor.execute('SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente FROM tbl_pagamentos INNER JOIN tbl_cliente ON fk_TBL_cliente_id_cliente = id_cliente WHERE id_pagamento = %s;',(id_INPUT,))
+            resultados = cursor.fetchone()     
+        if resultados == None:
+            print('Nenhum Resultado Para ', id_INPUT,'\n')
+            removerPagamento()
+    except ValueError:
+        print("ERRO!\nDigite apenas números inteiros para o ID.")
+        removerPagamento()
+
+    if resultados:
+        print("\nDados do pagamento encontrado:\n")
+        print(f"ID Pagamento: {resultados[0]}")
+        print(f"Valor: {resultados[1]}")
+        print(f"Data: {resultados[2]}")
+        print(f"Status: {resultados[3]}")
+        print(f"Formato: {resultados[4]}")
+        print(f"ID Cliente: {resultados[5]}")
+        print(f"Nome Cliente: {resultados[6]}")
+        print(f"CPF: {resultados[7]}")
+        confirmacaoPagamento = input('Deseja remover este pagamento ?\n|S|= Sim\n|N|= Não): \n')
+        if confirmacaoPagamento.lower() == 's':
+            cursor.execute("DELETE FROM tbl_pagamentos WHERE id_pagamento = %s", (id_INPUT,))
+            db.commit()
+            print("\nPagamento removido com sucesso!✅💣\n")
+            time.sleep(1)
+            removerPagamento()
+        else:
+            print("Ação cancelada!")
+            removerPagamento()
+
+def listarPagamentos():
+    print("=========💵📃Listar Pagamentos📃💵=========")
+    print("Comandos Disponíveis:\n|A| Listar Todos Pagamentos💵\n|B| Listar pagamentos aprovados📃✅\n|C| Listar Pagamentos Pendentes⏳\n")
+    
+    pgCmd = input(">>>")
+    try:
+        if pgCmd.lower() == "a":
+            print("Listando todos os pagamentos💵")
+            time.sleep(1)
+            cursor.execute("SELECT * FROM tbl_pagamentos;") #Contar quantas linhas de registro tem
+            rows = cursor.fetchall()
+
+            pgPagamentos = 1
+            TotalPaginasPg = math.ceil(len(rows)/5)                 #Dividir 5 registros por pagina +1 pq se houver resto add pg
+
+
+            cursor.execute("SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel FROM tbl_pagamentos INNER JOIN tbl_cliente INNER JOIN tbl_imovel ON fk_TBL_imovel_id_cliente = id_cliente LIMIT 5;")
+            data = cursor.fetchall()
+            for resultado in data:
+                print(f"\n>>> ID: {resultado[0]} |\n>>> Valor Pagamento: {resultado[1]} |\n>>> Data Pagamento: {resultado[2]} |\n>>> Status Pagamento: {resultado[3]} |\n>>> Forma De Pagamento: {resultado[4]} |\n>>> ID Cliente: {resultado[5]} |\n>>> Nome Cliente: {resultado[6]} |\n>>> CPF Cliente: {resultado[7]} |\n>>> ID Imovel: {resultado[8]} |\n>>> Imovel: {resultado[9]}")
+                print("Pagina: |{}| de |{}|\n".format(pgPagamentos,TotalPaginasPg))
+                print("Você está na pagina: {} de {}\n".format(pgPagamentos,TotalPaginasPg))
+
+            def listandoTodosPg():
+                pgPagamentos = True
+                while pgPagamentos:
+                    noPagina = 0
+                    pgPagamentos = input("Digite o número da página\nPara sair Digite: S\n>>>")
+
+                    if pgPagamentos.lower() == "s":
+                        print("Saindo...")
+                        time.sleep(1)
+                        pagamentos()
+                    else:
+                        try:
+                            int_noPagina = int(pgPagamentos)
+                            if type(int_noPagina) == int:
+                                pgPagamentos = int_noPagina
+                                if pgPagamentos > TotalPaginasPg+1:
+                                    print("Numero total de páginas é: {}".format(TotalPaginasPg))
+                                    listandoTodosPg()
+                            else:
+                                print("Erro! Digite apenas numeros inteiros para a pagina")
+                                listandoTodosPg()
+                            
+                            noPagina = pgPagamentos
+                            pgPagamentos = (pgPagamentos*5)-5
+                            cursor.execute("SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel FROM tbl_pagamentos INNER JOIN tbl_cliente INNER JOIN tbl_imovel ON fk_TBL_imovel_id_cliente = id_cliente LIMIT 5 OFFSET %s;",(pgPagamentos,))
+                            resultados = cursor.fetchall()
+                            for resultado in resultados:
+                                print(f"\n>>> ID: {resultado[0]} |\n>>> Valor Pagamento: {resultado[1]} |\n>>> Data Pagamento: {resultado[2]} |\n>>> Status Pagamento: {resultado[3]} |1=Pago✅ 0=Pendente⏳|\n>>> Forma De Pagamento: {resultado[4]} |\n>>> ID Cliente: {resultado[5]} |\n>>> Nome Cliente: {resultado[6]} |\n>>> CPF Cliente: {resultado[7]} |\n>>> ID Imovel: {resultado[8]} |\n>>> Imovel: {resultado[9]}")
+                            print("\n=============FIM DA PAGINA=================")
+                            time.sleep(0.5)
+                            print("\nVocê está na pagina: {} de {}".format(noPagina, TotalPaginasPg))
+                            listandoTodosPg()
+
+                        except ValueError:
+                            print("Comando inválido")
+                            noPagina = 1
+                            listandoTodosPg()
+            listandoTodosPg()
+            
+        elif pgCmd.lower() == "b":
+            print("Listando Pagamentos Aprovados💵✅")
+            time.sleep(2)
+            cursor.execute("SELECT * FROM tbl_pagamentos WHERE status_pagamento = True;") #Contar quantas linhas de registro tem
+            rows = cursor.fetchall()
+
+            pgPagamentos = 1
+            TotalPaginasPg = math.ceil(len(rows)/5) #Dividir 5 registros por pagina +1 pq não começamos na página 0
+
+
+
+            cursor.execute("SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel FROM tbl_pagamentos INNER JOIN tbl_cliente INNER JOIN tbl_imovel ON fk_TBL_imovel_id_cliente = id_cliente WHERE status_pagamento = True LIMIT 5;")
+            data = cursor.fetchall()
+            for resultado in data:
+                print(f"\n>>> ID: {resultado[0]} |\n>>> Valor Pagamento: {resultado[1]} |\n>>> Data Pagamento: {resultado[2]} |\n>>> Status Pagamento: {resultado[3]}✅|\n>>> Forma De Pagamento: {resultado[4]} |\n>>> ID Cliente: {resultado[5]} |\n>>> Nome Cliente: {resultado[6]} |\n>>> CPF Cliente: {resultado[7]} |\n>>> ID Imovel: {resultado[8]} |\n>>> Imovel: {resultado[9]}")
+                print("Pagina: |{}| de |{}|\n".format(pgPagamentos,TotalPaginasPg))
+                print("Você está na pagina: {} de {}\n".format(pgPagamentos,TotalPaginasPg))
+            
+            def listandoPgPagos():
+                pgPagamentos = True
+                while pgPagamentos:
+                    noPagina = 0
+                    pgPagamentos = input("Digite o número da página\nPara sair Digite: S\n>>>")
+
+                    if pgPagamentos.lower() == "s":
+                        print("Saindo...")
+                        time.sleep(1)
+                        pagamentos()
+                    else:
+                        try:
+                            int_noPagina = int(pgPagamentos)
+                            if type(int_noPagina) == int:
+                                pgPagamentos = int_noPagina
+                                if pgPagamentos == int(0):
+                                    pgPagamentos = 1
+                                if pgPagamentos > TotalPaginasPg:
+                                    print("Numero total de páginas é: {}".format(TotalPaginasPg))
+                                    listandoPgPagos()
+                            else:
+                                print("Erro! Digite apenas numeros inteiros para a pagina")
+                                listandoPgPagos()
+                            
+                            noPagina = pgPagamentos
+                            pgPagamentos = (pgPagamentos*5)-5
+                            cursor.execute("SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel FROM tbl_pagamentos INNER JOIN tbl_cliente INNER JOIN tbl_imovel ON fk_TBL_imovel_id_cliente = id_cliente WHERE status_pagamento = True LIMIT 5 OFFSET %s;",(pgPagamentos,))
+                            resultados = cursor.fetchall()
+                            for resultado in resultados:
+                                print(f"\n>>> ID: {resultado[0]} |\n>>> Valor Pagamento: {resultado[1]} |\n>>> Data Pagamento: {resultado[2]} |\n>>> Status Pagamento: {resultado[3]} |Pago✅\n>>> Forma De Pagamento: {resultado[4]} |\n>>> ID Cliente: {resultado[5]} |\n>>> Nome Cliente: {resultado[6]} |\n>>> CPF Cliente: {resultado[7]} |\n>>> ID Imovel: {resultado[8]} |\n>>> Imovel: {resultado[9]}")
+                            print("\n=============FIM DA PAGINA=================")
+                            time.sleep(0.5)
+                            print("\nVocê está na pagina: {} de {}".format(noPagina, TotalPaginasPg))
+                            listandoPgPagos()
+
+                        except ValueError:
+                            print("Comando inválido❌")
+                            noPagina = 1
+                            listandoPgPagos()
+                pgPagamentos = False
+            listandoPgPagos()
+
+
+        elif pgCmd.lower() == "c":
+            print("Listando pagamentos pendentes⏳")
+            time.sleep(2)
+            cursor.execute("SELECT * FROM tbl_pagamentos WHERE status_pagamento = False;") #Contar quantas linhas de registro tem
+            rows = cursor.fetchall()
+
+            pgPagamentos = 1
+            TotalPaginasPg = math.ceil(len(rows)/5) #Dividir 5 registros por pagina +1 pq não começamos na página 0
+
+
+
+            cursor.execute("SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel FROM tbl_pagamentos INNER JOIN tbl_cliente INNER JOIN tbl_imovel ON fk_TBL_imovel_id_cliente = id_cliente WHERE status_pagamento = False LIMIT 5;")
+            data = cursor.fetchall()
+            for resultado in data:
+                print(f"\n>>> ID: {resultado[0]} |\n>>> Valor Pagamento: {resultado[1]} |\n>>> Data Pagamento: {resultado[2]} |\n>>> Status Pagamento: {resultado[3]}❌⏳|\n>>> Forma De Pagamento: {resultado[4]} |\n>>> ID Cliente: {resultado[5]} |\n>>> Nome Cliente: {resultado[6]} |\n>>> CPF Cliente: {resultado[7]} |\n>>> ID Imovel: {resultado[8]} |\n>>> Imovel: {resultado[9]}")
+                print("Pagina: |{}| de |{}|\n".format(pgPagamentos,TotalPaginasPg))
+                print("Você está na pagina: {} de {}\n".format(pgPagamentos,TotalPaginasPg))
+            
+            def listandoPgPendente():
+                pgPagamentos = True
+                while pgPagamentos:
+                    noPagina = 0
+                    pgPagamentos = input("Digite o número da página\nPara sair Digite: S\n>>>")
+
+                    if pgPagamentos.lower() == "s":
+                        print("Saindo...")
+                        time.sleep(1)
+                        pagamentos()
+                    else:
+                        try:
+                            int_noPagina = int(pgPagamentos)
+                            if type(int_noPagina) == int:
+                                pgPagamentos = int_noPagina
+                                if pgPagamentos == int(0):
+                                    pgPagamentos = 1
+                                if pgPagamentos > TotalPaginasPg:
+                                    print("Numero total de páginas é: {}".format(TotalPaginasPg))
+                                    listandoPgPendente()
+                            else:
+                                print("Erro! Digite apenas numeros inteiros para a pagina")
+                                listandoPgPendente()
+                            
+                            noPagina = pgPagamentos
+                            pgPagamentos = (pgPagamentos*5)-5
+                            cursor.execute("SELECT tbl_pagamentos.id_pagamento, tbl_pagamentos.valor_pagamento, tbl_pagamentos.data_pagamento, tbl_pagamentos.status_pagamento, tbl_pagamentos.formato_pagamento, tbl_cliente.id_cliente, tbl_cliente.nome_cliente, tbl_cliente.cpf_cliente, tbl_imovel.id_imovel, tbl_imovel.descricao_imovel FROM tbl_pagamentos INNER JOIN tbl_cliente INNER JOIN tbl_imovel ON fk_TBL_imovel_id_cliente = id_cliente WHERE status_pagamento = False LIMIT 5 OFFSET %s;",(pgPagamentos,))
+                            resultados = cursor.fetchall()
+                            for resultado in resultados:
+                                print(f"\n>>> ID: {resultado[0]} |\n>>> Valor Pagamento: {resultado[1]} |\n>>> Data Pagamento: {resultado[2]} |\n>>> Status Pagamento: {resultado[3]} |Pendente⏳\n>>> Forma De Pagamento: {resultado[4]} |\n>>> ID Cliente: {resultado[5]} |\n>>> Nome Cliente: {resultado[6]} |\n>>> CPF Cliente: {resultado[7]} |\n>>> ID Imovel: {resultado[8]} |\n>>> Imovel: {resultado[9]}")
+                            print("\n=============FIM DA PAGINA=================")
+                            time.sleep(0.5)
+                            print("\nVocê está na pagina: {} de {}".format(noPagina, TotalPaginasPg))
+                            listandoPgPendente()
+
+                        except ValueError:
+                            print("Comando inválido❌")
+                            noPagina = 1
+                            listandoPgPendente()
+                pgPagamentos = False
+            listandoPgPendente()
+
+        else:
+            print("Comando inválido❌")
+            time.sleep(1)
+            listarPagamentos()
+
+    except ValueError:
+        print("Comando Inválido❌")
+        time.sleep(1)
+        pagamentos()
 
 def pagamentos():
     print("=========💵Pagamentos💵=========")
@@ -1122,8 +1383,8 @@ def pagamentos():
     elif comando.lower() == str("l"):
         print("Listar pagamentos📃")
         time.sleep(1)
-        #Ir para função()
+        listarPagamentos()
     elif comando.lower() == str("r"):
         print("Remover registro de pagamento💣💵")
         time.sleep(1)
-        #Ir para função()
+        removerPagamento()
